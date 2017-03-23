@@ -20,6 +20,10 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: './dashboard/dashboard.module#DashboardModule'
+      },
+      {
+        path: 'meeting',
+        loadChildren: './meeting/meeting.module#MeetingModule'
       }
     ]
   }

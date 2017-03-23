@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+import { HttpModule } from '@angular/http'
+
 import { AppComponent } from './app.component';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { TabsModule } from 'ng2-bootstrap/tabs';
@@ -24,6 +26,7 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     DropdownModule.forRoot(),
     TabsModule.forRoot(),
     ChartsModule,
+    HttpModule,
     AppRoutingModule,
   ],
   declarations: [
@@ -38,6 +41,6 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     provide: LocationStrategy,
     useClass: HashLocationStrategy
   }],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

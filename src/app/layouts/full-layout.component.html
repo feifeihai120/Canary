@@ -14,7 +14,7 @@
     <li class="nav-item dropdown" dropdown (onToggle)="toggled($event)">
       <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
         dropdownToggle>
-        <img src="assets/img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
+        <img src="assets/img/avatars/avatar.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
         <span class="hidden-md-down">admin</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right" dropdownMenu aria-labelledby="simple-dropdown">
@@ -36,28 +36,24 @@
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/dashboard']"><i class="icon-speedometer"></i> Dashboard </a>
         </li>
-        <li class="divider"></li>
-        <li class="nav-title">
-          会议
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/meeting']"><i class="icon-calculator"></i> 会议 </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/widgets']"><i class="icon-calculator"></i> 我的会议 </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/charts']"><i class="icon-pie-chart"></i> 最新会议</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/meetingMaterial']"><i class="icon-calculator"></i> 会议材料 </a>
         </li>
         <li class="divider"></li>
         <li class="nav-title">
           我的设置
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/pages/login']"><i class="icon-star"></i> 个人信息</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/userInfo']"><i class="icon-star"></i> 个人信息</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/pages/register']"><i class="icon-star"></i> 与会记录</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/userMeeting']"><i class="icon-star"></i> 与会记录</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/pages/404']"><i class="icon-star"></i> 我的材料</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/myMaterial']"><i class="icon-star"></i> 我的材料</a>
         </li>
       </ul>
     </nav>
