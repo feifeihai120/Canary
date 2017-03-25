@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestMethod, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Http, Response, Headers, URLSearchParams } from '@angular/http';
+import { Router } from '@angular/router'
 
 import 'rxjs/add/operator/toPromise'
 
@@ -10,29 +10,33 @@ import { MeetingRoom } from './meeting_room'
 
 import { BaseUrl } from './url'
 
-/**
-* This class provides the Meeting service with methods to read names and add names.
-*/
 @Injectable()
 export class MeetingService {
 
-    /**
-    * Creates a new MeetingService with the injected Http.
-    * @param {Http} http - The injected Http.
-    * @constructor
-    */
-    constructor(private http: Http) { }
-    /**
-    * Returns an Observable for the HTTP GET request for the JSON resource.
-    * @return {string[]} The Observable for the HTTP request.
-    */
+  
+    constructor(private http: Http, private router: Router) { }
+   
     getAllMeetingPage(parmas: URLSearchParams): Promise<MeetingPage> {
         console.log('get all meetings...')
         return this.http.get(BaseUrl.getBaseUrl() + 'meeting', { search: parmas })
             .toPromise()
             // .then((res: Response) => res.json().data as Meeting[])
-            .then((res: Response) => res.json().data as MeetingPage)
-            .catch(this.handleError);
+            .then((res: Response) => res.json())
+            .catch(err => this.router.navigate(["/login"]));
+            // .catch(this.handleError)
+    }
+
+    /**
+     * Handle HTTP error
+    */
+    private handleError(error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `error.status - error.statusText` : 'Server error';
+        console.log("status: ", error.status)
+        console.log("message: ", error.message)
+        console.error('errMsg', errMsg); // log to console instead
+        this.router.navigate(["/login"])
+        // return Promise.reject(errMsg)
     }
 
     /**
@@ -57,18 +61,8 @@ export class MeetingService {
                 console.log(res)
                 console.log(res.json())
                 console.log(res.json().data)
-                return res.json().data as MeetingRoom[]
+                return res.json()
             })
             .catch(this.handleError);
-    }
-
-    /**
-    * Handle HTTP error
-    */
-    private handleError(error: any): Promise<any> {
-        let errMsg = (error.message) ? error.message :
-            error.status ? `error.status - error.statusText` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Promise.reject(errMsg)
     }
 }

@@ -2,8 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+import { FormsModule } from '@angular/forms'
+import { RouterModule } from '@angular/router'
 import { HttpModule } from '@angular/http'
 
+// 自定义的
 import { AppComponent } from './app.component';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { TabsModule } from 'ng2-bootstrap/tabs';
@@ -19,6 +22,10 @@ import { AppRoutingModule } from './app.routing';
 
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
+import { RegisterComponent } from './pages/register.component'
+import { LoginComponent } from './pages/login.component'
+
+import { UserService } from './service/user.service'
 
 @NgModule({
   imports: [
@@ -26,7 +33,9 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     DropdownModule.forRoot(),
     TabsModule.forRoot(),
     ChartsModule,
+    FormsModule,
     HttpModule,
+    RouterModule,
     AppRoutingModule,
   ],
   declarations: [
@@ -36,11 +45,14 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     BreadcrumbsComponent,
     SIDEBAR_TOGGLE_DIRECTIVES,
     AsideToggleDirective,
+    RegisterComponent,
+    LoginComponent
   ],
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }],
+  },
+    UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

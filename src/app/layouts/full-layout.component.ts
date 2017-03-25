@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
+
+// storage
+import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
+
+import { User } from '../service/user'
+import { UserService } from '../service/user.service'
 
 @Component({
   selector: 'app-dashboard',
@@ -8,6 +15,14 @@ export class FullLayoutComponent implements OnInit {
 
   public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
+
+  @SessionStorage() private currUser: User
+
+  constructor(
+    private userService: UserService,
+    private router: Router
+  ) {
+  }
 
   public toggled(open: boolean): void {
     console.log('Dropdown is now: ', open);
@@ -20,4 +35,9 @@ export class FullLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void { }
+
+  logout() {
+    this.userService.logout()
+      .then(b => this.router.navigateByUrl("/login"))
+  }
 }

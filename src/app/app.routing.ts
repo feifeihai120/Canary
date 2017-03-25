@@ -3,11 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
+import { RegisterComponent } from './pages/register.component'
+import { LoginComponent } from './pages/login.component'
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'register',
     pathMatch: 'full',
   },
   {
@@ -18,14 +20,18 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: 'dashboard',
-        loadChildren: './dashboard/dashboard.module#DashboardModule'
-      },
-      {
         path: 'meeting',
         loadChildren: './meeting/meeting.module#MeetingModule'
       }
     ]
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
 ];
 
