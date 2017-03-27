@@ -6,6 +6,11 @@ import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
 import { HttpModule } from '@angular/http'
 
+// storage
+import { Ng2Webstorage } from 'ng2-webstorage';
+// cookie
+import { CookieService } from 'angular2-cookie/services/cookies.service';
+
 // 自定义的
 import { AppComponent } from './app.component';
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
@@ -22,6 +27,7 @@ import { AppRoutingModule } from './app.routing';
 
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
+import { SimpleLayoutComponent } from './layouts/simple-layout.component'
 import { RegisterComponent } from './pages/register.component'
 import { LoginComponent } from './pages/login.component'
 
@@ -37,10 +43,12 @@ import { UserService } from './service/user.service'
     HttpModule,
     RouterModule,
     AppRoutingModule,
+    Ng2Webstorage,
   ],
   declarations: [
     AppComponent,
     FullLayoutComponent,
+    SimpleLayoutComponent,
     NAV_DROPDOWN_DIRECTIVES,
     BreadcrumbsComponent,
     SIDEBAR_TOGGLE_DIRECTIVES,
@@ -52,7 +60,8 @@ import { UserService } from './service/user.service'
     provide: LocationStrategy,
     useClass: HashLocationStrategy
   },
-    UserService],
+    UserService,
+    CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

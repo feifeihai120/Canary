@@ -13,30 +13,17 @@ import { BaseUrl } from './url'
 @Injectable()
 export class MeetingService {
 
-  
+
     constructor(private http: Http, private router: Router) { }
-   
-    getAllMeetingPage(parmas: URLSearchParams): Promise<MeetingPage> {
-        console.log('get all meetings...')
+
+    getPageMeeting(parmas: URLSearchParams): Promise<MeetingPage> {
+        console.log('get all meetings...', parmas)
         return this.http.get(BaseUrl.getBaseUrl() + 'meeting', { search: parmas })
             .toPromise()
             // .then((res: Response) => res.json().data as Meeting[])
             .then((res: Response) => res.json())
             .catch(err => this.router.navigate(["/login"]));
-            // .catch(this.handleError)
-    }
-
-    /**
-     * Handle HTTP error
-    */
-    private handleError(error: any) {
-        let errMsg = (error.message) ? error.message :
-            error.status ? `error.status - error.statusText` : 'Server error';
-        console.log("status: ", error.status)
-        console.log("message: ", error.message)
-        console.error('errMsg', errMsg); // log to console instead
-        this.router.navigate(["/login"])
-        // return Promise.reject(errMsg)
+        // .catch(this.handleError) 
     }
 
     /**
@@ -47,7 +34,7 @@ export class MeetingService {
         let params: URLSearchParams = new URLSearchParams();
         params.set('pageNo', '1');
         params.set('pageSize', '10');
-        return this.getAllMeetingPage(params)
+        return this.getPageMeeting(params)
             .then(meetingPage => meetingPage.list)
     }
 
@@ -64,5 +51,19 @@ export class MeetingService {
                 return res.json()
             })
             .catch(this.handleError);
+    }
+
+
+    /**
+     * Handle HTTP error
+    */
+    private handleError(error: any) {
+        let errMsg = (error.message) ? error.message :
+            error.status ? `error.status - error.statusText` : 'Server error';
+        console.log("status: ", error.status)
+        console.log("message: ", error.message)
+        console.error('errMsg', errMsg); // log to console instead
+        this.router.navigate(["/login"])
+        // return Promise.reject(errMsg)
     }
 }

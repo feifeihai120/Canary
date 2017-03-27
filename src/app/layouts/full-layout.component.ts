@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 
 // storage
-import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
+import { SessionStorage } from 'ng2-webstorage';
 
 import { User } from '../service/user'
 import { UserService } from '../service/user.service'

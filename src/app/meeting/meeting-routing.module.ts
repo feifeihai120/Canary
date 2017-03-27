@@ -1,16 +1,31 @@
 import { NgModule } from '@angular/core';
-import { Routes,
-     RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 import { MeetingComponent } from './meeting.component';
+import { NewMeetingComponent } from './new-meeting.component'
 
 const routes: Routes = [
   {
     path: '',
-    component: MeetingComponent,
     data: {
       title: '会议'
-    }
+    },
+    children: [
+      {
+        path: 'meetingList',
+        component: MeetingComponent,
+        data: {
+          title: '会议列表'
+        }
+      },
+      {
+        path: 'newMeeting',
+        component: NewMeetingComponent,
+        data: {
+          title: '新建会议'
+        }
+      }
+    ]
   }
 ];
 
@@ -18,4 +33,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MeetingRoutingModule {}
+export class MeetingRoutingModule { }

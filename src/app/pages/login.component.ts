@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 
 // storage
-import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
+import { SessionStorage } from 'ng2-webstorage';
+// cookie
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 import { LoginUser } from '../service/login_user'
 import { UserService } from '../service/user.service'
@@ -23,7 +25,11 @@ export class LoginComponent implements OnInit {
 
   @SessionStorage() private currUser: User = new User()
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private cookieService: CookieService
+  ) { }
 
   ngOnInit() {
     this.loginUser = new LoginUser()
@@ -31,14 +37,17 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log('login user: ')
-    console.log(this.loginUser)
+    // console.log('login user: ')
+    // console.log(this.loginUser)
     this.check()
     this.setLoginFlag()
     this.userService.login(this.loginUser)
       .then(user => {
         this.currUser = user
-        this.router.navigateByUrl("/meeting")
+        // console.log('cookie from back: ' + this.cookieService.get('SESSION'))
+        this.cookieService.put('my-cookie', 'cookie-test')
+        setTimeout(2000)
+        this.router.navigateByUrl("/meeting/meetingList")
       })
   }
 

@@ -12,7 +12,9 @@ export class UserService {
 
     private headers = new Headers({ 'Content-Type': 'application/json' })
 
-    constructor(private http: Http) { }
+    constructor(
+        private http: Http
+    ) { }
 
     /**
      * 用户登录
@@ -22,7 +24,12 @@ export class UserService {
         // console.log("login : ", loginUser)
         return this.http.post(BaseUrl.getBaseUrl() + 'users/login', JSON.stringify(loginUser), { headers: this.headers })
             .toPromise()
-            .then(res => res.json())
+            .then(res => {
+                console.log('res.headers.keys: ' + res.headers.keys());
+                console.log('res.headers["Set-Cookie"]: ', res.headers.get('Set-Cookie'))
+                console.log('res : ' + res)
+                return res.json()
+            })
             .catch(this.handleError)
     }
 
@@ -30,7 +37,7 @@ export class UserService {
      * 用户退出 登录
      */
     logout(): Promise<Boolean> {
-        return this.http.post(BaseUrl.getBaseUrl() + 'users/logout', { headers: this.headers })
+        return this.http.get(BaseUrl.getBaseUrl() + 'users/logout')
             .toPromise()
             .then(() => true)
             .catch(this.handleError)
