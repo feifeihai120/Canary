@@ -53,6 +53,16 @@ export class MeetingService {
             .catch(this.handleError);
     }
 
+    /**
+     * 根据会议id获取会议详细信息
+     */
+    getMeetingDetail(id: number): Promise<Meeting> {
+        const url = `${BaseUrl.getBaseUrl()}meeting/detail/${id}`
+        return this.http.get(url)
+            .toPromise()
+            .then(res => res.json())
+            .catch(this.handleError)
+    }
 
     /**
      * Handle HTTP error

@@ -4,13 +4,19 @@ import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
+// tabs
+import { TabsModule } from 'ng2-bootstrap/tabs';
 
 // 时间 控件
 import { CalendarModule } from 'primeng/primeng'
 
+// 功能 组件
 import { MeetingComponent } from './meeting.component';
 import { NewMeetingComponent } from './new-meeting.component'
+import { MeetingDetailComponent } from './meeting-detail.component'
+
 import { MeetingRoutingModule } from './meeting-routing.module';
+
 import { MeetingService } from '../service/meeting.service'
 
 @NgModule({
@@ -22,8 +28,13 @@ import { MeetingService } from '../service/meeting.service'
     RouterModule,
     FormsModule,
     CalendarModule,
+    TabsModule
   ],
-  declarations: [MeetingComponent, NewMeetingComponent],
+  declarations: [
+    MeetingComponent,
+    NewMeetingComponent,
+    MeetingDetailComponent
+  ],
   providers: [MeetingService]
 })
 export class MeetingModule { }

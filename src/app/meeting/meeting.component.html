@@ -29,7 +29,7 @@
                 <td>{{ meeting.managerName }}</td>
                 <td>{{ meeting.status }}</td>
                 <td>{{ meeting.typeName }}</td>
-                <td>删除</td>
+                <td><button type="button" class="btn btn-primary" (click)="lookDetail(meeting.id)" ><i class="fa fa-star"></i>&nbsp; 查看</button> &nbsp; <button type="button" class="btn btn-secondary" (click)="deleteMeeting(meeting.id)" ><i class="fa fa-lightbulb-o"></i>&nbsp; 删除</button></td>
               </tr>
             </tbody>
           </table>

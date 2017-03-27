@@ -116,4 +116,12 @@ export class MeetingComponent implements OnInit {
   newMeeting() {
     this.router.navigateByUrl('/meeting/newMeeting')
   }
+
+  lookDetail(id: number) {
+    this.router.navigate(['/meeting/meetingDetail', id])
+  }
+
+  deleteMeeting(id: number) {
+
+  }
 }

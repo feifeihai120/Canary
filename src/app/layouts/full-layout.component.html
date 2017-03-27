@@ -6,9 +6,6 @@
     <li class="nav-item">
       <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
     </li>
-    <li class="nav-item px-1">
-      <a class="nav-link" href="#">首页</a>
-    </li>
   </ul>
   <ul class="nav navbar-nav ml-auto">
     <li class="nav-item dropdown" dropdown (onToggle)="toggled($event)">
@@ -46,6 +43,9 @@
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/meetingMaterial']"><i class="icon-calculator"></i> 会议材料 </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/group']"><i class="icon-calculator"></i> 分组 </a>
+        </li>
         <li class="divider"></li>
         <li class="nav-title">
           我的设置
@@ -57,7 +57,7 @@
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/userMeeting']"><i class="icon-star"></i> 与会记录</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/myMaterial']"><i class="icon-star"></i> 我的材料</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/userMaterial']"><i class="icon-star"></i> 我的材料</a>
         </li>
       </ul>
     </nav>

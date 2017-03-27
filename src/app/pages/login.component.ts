@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
       .then(user => {
         this.currUser = user
         // console.log('cookie from back: ' + this.cookieService.get('SESSION'))
-        this.cookieService.put('my-cookie', 'cookie-test')
+        // this.cookieService.put('my-cookie', 'cookie-test')
         setTimeout(2000)
         this.router.navigateByUrl("/meeting/meetingList")
       })

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MeetingComponent } from './meeting.component';
 import { NewMeetingComponent } from './new-meeting.component'
+import { MeetingDetailComponent } from './meeting-detail.component'
 
 const routes: Routes = [
   {
@@ -23,6 +24,13 @@ const routes: Routes = [
         component: NewMeetingComponent,
         data: {
           title: '新建会议'
+        }
+      },
+      {
+        path: 'meetingDetail/:id',
+        component: MeetingDetailComponent,
+        data: {
+          title: '会议详细信息'
         }
       }
     ]
