@@ -1,7 +1,7 @@
 export class Meeting {
     id: number;
     name: string;
-    topics: string;
+    meetingTopics: string;
     meetingDesc: string;
     typeId: number;
     typeName: string;
@@ -13,17 +13,17 @@ export class Meeting {
     statusDisplay: string;
     startTime: string;
     endTime: string;
-    secret: number;
+    secret: boolean = true;
     secretDispaly: string;
-    opened: number;
+    opened: boolean = true;
     openedDisplay: string;
-    autoSync: number;
+    autoSync: boolean = true;
     autoSyncDispaly: string;
-    vote: number;
+    vote: boolean = false;
     voteDisplay: string;
-    signIn: number;
+    signIn: boolean = false;
     signInDisplay: string;
-    autoDelete: number;
+    autoDelete: boolean = false;
     autoDeleteDisplay: string;
     createdAt: string;
     updatedAt: string;

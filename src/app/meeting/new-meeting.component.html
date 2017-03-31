@@ -8,51 +8,58 @@
         </div>
         <div class="card-block">
           <div class="form-group row">
-            <label class="col-md-2 form-control-label" for="text-input">会议名称</label>
+            <label class="col-md-2 form-control-label" for="name">会议名称</label>
             <div class="col-md-10">
-              <input type="text" id="text-input" name="text-input" class="form-control" placeholder="会议名称" [(ngModel)]="meeting.name">
+              <input type="text" id="name" name="name" class="form-control" placeholder="会议名称" [(ngModel)]="meeting.name">
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-md-2 form-control-label" for="text-input">会议议题</label>
-            <div class="col-md-10">
-              <input type="text" id="text-input" name="text-input" class="form-control" placeholder="会议议题.多个议题请用';'分割" [(ngModel)]="meeting.topics">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-md-2 form-control-label" for="textarea-input">会议描述</label>
-            <div class="col-md-10">
-              <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="会议描述.." [(ngModel)]="meeting.meetingDesc"></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-md-2 form-control-label" for="select">会议室</label>
+            <label class="col-md-2 form-control-label" for="type"> 会议类型</label>
             <div class="col-md-3">
-              <select id="select" name="select" class="form-control" size="1" [(ngModel)]="meeting.roomId">
-                  <option value="0">Please select</option>
-                  <option value="1">Option #1</option>
-                  <option value="2">Option #2</option>
-                  <option value="3">Option #3</option>
+              <select id="type" name="type" class="form-control" size="1" [(ngModel)]="meeting.typeId">
+                <option value="0">请选择</option>
+                <option *ngFor="let meetingType of meetingTypes" value="{{meetingType.id}}">{{meetingType.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 form-control-label" for="meetingTopics">会议议题</label>
+            <div class="col-md-10">
+              <input type="text" id="meetingTopics" name="meetingTopics" class="form-control" placeholder="会议议题.多个议题请用';'分割" [(ngModel)]="meeting.meetingTopics">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 form-control-label" for="meetingDesc">会议描述</label>
+            <div class="col-md-10">
+              <textarea id="meetingDesc" name="meetingDesc" rows="9" class="form-control" placeholder="会议描述.." [(ngModel)]="meeting.meetingDesc"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 form-control-label" for="roomId">会议室</label>
+            <div class="col-md-3">
+              <select id="roomId" name="roomId" class="form-control" size="1" [(ngModel)]="meeting.roomId">
+                  <option value="0">请选择</option>
+                  <option *ngFor="let meetingRoom of meetingRooms" value="{{meetingRoom.id}}">{{meetingRoom.name}}</option>
                 </select>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 form-control-label" for="select">开始时间</label>
             <div class="col-md-3">
-              <p-calendar [(ngModel)]="meeting.startTime" [showTime]="true"></p-calendar>
+              <p-calendar [(ngModel)]="meeting.startTime" [showTime]="true" dateFormat="yy-mm-dd" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2030"></p-calendar>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 form-control-label" for="select">结束时间</label>
             <div class="col-md-3">
-              <p-calendar [(ngModel)]="meeting.endTime" [showTime]="true"></p-calendar>
+              <p-calendar [(ngModel)]="meeting.endTime" [showTime]="true" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2030"></p-calendar>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 form-control-label">需要密码入会</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="secret">
-                  <input type="checkbox" id="secret" name="secret" value="option" [(ngModel)]="meeting.secret"> 被选择后，所有参会人员将被要求输入密码后入会
+                  <input type="checkbox" id="secret" name="secret" [(ngModel)]="meeting.secret"> 被选择后，所有参会人员将被要求输入密码后入会
                 </label>
             </div>
           </div>
@@ -60,7 +67,7 @@
             <label class="col-md-2 form-control-label">公开会议</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="opened">
-                  <input type="checkbox" id="opened" name="opened" value="option" [(ngModel)]="meeting.opened"> 被选择后，系统内所有用户都可参会
+                  <input type="checkbox" id="opened" name="opened" checked [(ngModel)]="meeting.opened"> 被选择后，系统内所有用户都可参会
                 </label>
             </div>
           </div>
@@ -68,7 +75,7 @@
             <label class="col-md-2 form-control-label">自动同屏</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="autoSync">
-                  <input type="checkbox" id="autoSync" name="autoSync" value="option" [(ngModel)]="meeting.autoSync"> 被选择后，用户进入会议将会自动开始同屏
+                  <input type="checkbox" id="autoSync" name="autoSync" [(ngModel)]="meeting.autoSync"> 被选择后，用户进入会议将会自动开始同屏
                 </label>
             </div>
           </div>
@@ -76,7 +83,7 @@
             <label class="col-md-2 form-control-label">开启投票系统</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="vote">
-                  <input type="checkbox" id="vote" name="vote" value="option" [(ngModel)]="meeting.vote"> 被选择后，会议界面中将显示投票，并可操作投票功能
+                  <input type="checkbox" id="vote" name="vote" [(ngModel)]="meeting.vote"> 被选择后，会议界面中将显示投票，并可操作投票功能
                 </label>
             </div>
           </div>
@@ -84,7 +91,7 @@
             <label class="col-md-2 form-control-label">需要签到</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="signIn">
-                  <input type="checkbox" id="signIn" name="signIn" value="option" [(ngModel)]="meeting.signIn"> 被选择后，会议界面中将显示签到功能，用户可手写签名方式签到
+                  <input type="checkbox" id="signIn" name="signIn" [(ngModel)]="meeting.signIn"> 被选择后，会议界面中将显示签到功能，用户可手写签名方式签到
                 </label>
             </div>
           </div>
@@ -92,7 +99,7 @@
             <label class="col-md-2 form-control-label">会议材料自动删除</label>
             <div class="col-md-5">
               <label class="checkbox-inline" for="autoDelete">
-                  <input type="checkbox" id="autoDelete" name="autoDelete" value="option" [(ngModel)]="meeting.autoDelete"> 被选择后，会议材料将会在会议结束后自动删除
+                  <input type="checkbox" id="autoDelete" name="autoDelete" [(ngModel)]="meeting.autoDelete"> 被选择后，会议材料将会在会议结束后自动删除
                 </label>
             </div>
           </div>

@@ -5,25 +5,36 @@ import { Router } from '@angular/router'
 import 'rxjs/add/operator/toPromise'
 
 import { Meeting } from './meeting'
+import { MeetingModel } from './meeting_model'
 import { MeetingPage } from './meeting_page'
 import { MeetingRoom } from './meeting_room'
+import { NewMeetingInfo } from './new_meeting_info'
 
 import { BaseUrl } from './url'
 
 @Injectable()
 export class MeetingService {
 
+    private headers: Headers = new Headers({ 'Content-Type': 'application/json' })
 
     constructor(private http: Http, private router: Router) { }
 
+    /**
+     * 创建一个 会议
+     */
+    create(meeting: Meeting): Promise<number> {
+        // console.log(meeting)
+        return this.http.post(BaseUrl.getBaseUrl() + 'meeting', JSON.stringify(meeting), { headers: this.headers })
+            .toPromise()
+            .then((res: Response) => res.json())
+            .catch(this.handleError)
+    }
+
     getPageMeeting(parmas: URLSearchParams): Promise<MeetingPage> {
-        console.log('get all meetings...', parmas)
         return this.http.get(BaseUrl.getBaseUrl() + 'meeting', { search: parmas })
             .toPromise()
-            // .then((res: Response) => res.json().data as Meeting[])
             .then((res: Response) => res.json())
-            .catch(err => this.router.navigate(["/login"]));
-        // .catch(this.handleError) 
+            .catch(this.handleError)
     }
 
     /**
@@ -38,19 +49,25 @@ export class MeetingService {
             .then(meetingPage => meetingPage.list)
     }
 
+    /**
+     * 获取会议室列表，暂时未加条件
+     */
     getAllMeetingRoom(): Promise<MeetingRoom[]> {
         console.log('get all meetingRoos...')
         return this.http.get(BaseUrl.getBaseUrl() + 'meeting/meetingRooms')
             .toPromise()
-            // .then((res: Response) => res.json().data as Meeting[])
-            .then(function (res) {
-                console.log('got meetingRoos...')
-                console.log(res)
-                console.log(res.json())
-                console.log(res.json().data)
-                return res.json()
-            })
+            .then(res => res.json())
             .catch(this.handleError);
+    }
+
+    /**
+     * 获取创建一个会议需要的所有信息
+     */
+    getNewMeetingInfo(): Promise<NewMeetingInfo> {
+        return this.http.get(BaseUrl.getBaseUrl() + 'meeting/newMeetingInfo')
+            .toPromise()
+            .then(res => res.json())
+            .catch(this.handleError)
     }
 
     /**
