@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-// Layouts
+// 自定义组件
 import { FullLayoutComponent } from './layouts/full-layout.component';
 import { SimpleLayoutComponent} from './layouts/simple-layout.component'
+import { RunMeetingLayoutComponent } from './layouts/run-meeting-layout.component'
 import { RegisterComponent } from './pages/register.component'
 import { LoginComponent } from './pages/login.component'
 
@@ -53,6 +54,19 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: '',
+    component: RunMeetingLayoutComponent,
+    data: {
+      title: '会议室'
+    },
+    children: [
+      {
+        path: 'runMeeting',
+        loadChildren: './run-meeting/run-meeting.module#RunMeetingModule'
+      }
+    ]
   }
 ];
 

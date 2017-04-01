@@ -32,6 +32,9 @@ app-root {
   .main {
     flex: 1;
   }
+  .main-run-meeting {
+    flex: 1;
+  }
 
   .sidebar {
     // $sidebar-width is the width of the columns
@@ -84,10 +87,17 @@ app-root {
   .main, .app-footer {
     margin-left: $sidebar-width;
   }
+  
+  .main-run-meeting {
+    margin-left: $aside-menu-width;
+  }
 
   &.sidebar-hidden {
 
     .main, .app-footer {
+      margin-left: 0;
+    }
+    .main-run-meeting, .app-footer {
       margin-left: 0;
     }
   }
@@ -124,9 +134,16 @@ app-root {
       margin-left: $sidebar-compact-width;
     }
 
+    .main-run-meeting, .app-footer {
+      margin-left: $sidebar-compact-width;
+    }
+
     &.sidebar-hidden {
 
       .main, .app-footer {
+        margin-left: 0;
+      }
+      .main-run-meeting, .app-footer {
         margin-left: 0;
       }
     }
@@ -139,7 +156,7 @@ app-root {
 .aside-menu-hidden {
 
   .aside-menu {
-    margin-right: - $aside-menu-width;
+    margin-left: - $aside-menu-width;
   }
 }
 
@@ -147,7 +164,7 @@ app-root {
 
   .aside-menu {
     position: fixed;
-    right: 0;
+    left: 0;
     height: 100%;
 
     .tab-content {
@@ -156,12 +173,16 @@ app-root {
   }
 
   .main, .app-footer {
-    margin-right: $aside-menu-width;
+    // margin-right: $aside-menu-width;
   }
 
   &.aside-menu-hidden {
 
     .main, .app-footer {
+      margin-right: 0;
+    }
+
+    .main-run-meeting, .app-footer {
       margin-right: 0;
     }
   }
@@ -204,6 +225,7 @@ app-root {
 .app-footer,
 .sidebar,
 .main,
+.main-run-meeting,
 .aside-menu {
   transition-duration: $layout-transition-speed, $layout-transition-speed;
   transition-property: margin-left, margin-right;
@@ -268,6 +290,9 @@ app-root {
   .main, .app-footer {
     margin-left: 0 !important;
   }
+  .main-run-meeting, .app-footer {
+    margin-left: 0 !important;
+  }
 
   .aside-menu {
     margin-right: - $aside-menu-width;
@@ -285,6 +310,10 @@ app-root {
     }
 
     .main {
+      margin-right: - $mobile-sidebar-width !important;
+      margin-left: $mobile-sidebar-width !important;
+    }
+    .main-run-meeting {
       margin-right: - $mobile-sidebar-width !important;
       margin-left: $mobile-sidebar-width !important;
     }

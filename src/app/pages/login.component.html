@@ -9,9 +9,7 @@
               <div *ngIf="!showMessage">
                 <p class="text-muted">Sign In to your account</p>
               </div>
-              <div *ngIf="showMessage">
-                <p  class="bg-danger mt-1 mb-1">{{ message }}</p>
-              </div>
+              <div class="alert alert-warning" *ngIf="showMessage" role="alert">{{ message }}</div>
               <div class="input-group mb-1">
                 <span class="input-group-addon"><i class="icon-user"></i></span>
                 <!--<input type="text" class="form-control" placeholder="Username">-->

@@ -11,6 +11,7 @@ import { MeetingPage } from '../service/meeting_page'
 
 @Component({
   moduleId: module.id,
+  selector: 'meetingList',
   templateUrl: 'meeting.component.html'
 })
 export class MeetingComponent implements OnInit {
@@ -123,5 +124,13 @@ export class MeetingComponent implements OnInit {
 
   deleteMeeting(id: number) {
 
+  }
+
+  /**
+   * 进入会议
+   * @param id meetingid
+   */
+  enterMeeting(id: number) {
+    this.router.navigate(['/runMeeting/pdf', id])
   }
 }

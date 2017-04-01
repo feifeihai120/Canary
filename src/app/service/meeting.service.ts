@@ -73,7 +73,7 @@ export class MeetingService {
     /**
      * 根据会议id获取会议详细信息
      */
-    getMeetingDetail(id: number): Promise<Meeting> {
+    getMeetingDetail(id: number): Promise<MeetingModel> {
         const url = `${BaseUrl.getBaseUrl()}meeting/detail/${id}`
         return this.http.get(url)
             .toPromise()

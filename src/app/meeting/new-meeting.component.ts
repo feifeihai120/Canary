@@ -13,6 +13,7 @@ import { MeetingType } from '../service/meeting_type'
 
 @Component({
     moduleId: module.id,
+    selector: 'new-meeting',
     templateUrl: 'new-meeting.component.html',
 })
 export class NewMeetingComponent implements OnInit {
@@ -53,5 +54,12 @@ export class NewMeetingComponent implements OnInit {
      */
     reset() {
         this.meeting = new Meeting()
+    }
+
+    /**
+     * 取消新建会议，返回会议列表
+     */
+    cancel() {
+        this.router.navigateByUrl('/meeting/meetingList')
     }
 }

@@ -4,6 +4,6 @@ import { MeetingMaterial } from './meeting_material'
 export class MeetingTopicModel {
     id: number
     name: string
-    meetingPeople: MeetingPeople
-    meetingMaterial: MeetingMaterial
+    meetingPeople: MeetingPeople[]
+    meetingMaterials: MeetingMaterial[]
 }
