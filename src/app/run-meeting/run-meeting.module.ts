@@ -10,6 +10,9 @@ import { TabsModule } from 'ng2-bootstrap/tabs';
 // pdf-viewer
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
 
+// primeng
+import { GrowlModule } from 'primeng/primeng';
+
 // shared
 import { AsideToggleDirective } from '../shared/aside.directive';
 
@@ -26,7 +29,8 @@ import { MeetingService } from '../service/meeting.service'
         RouterModule,
         FormsModule,
         DropdownModule,
-        TabsModule
+        TabsModule,
+        GrowlModule
     ],
     declarations: [PdfComponent, AsideToggleDirective, PdfViewerComponent],
     providers: [MeetingService],

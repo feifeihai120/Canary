@@ -32,7 +32,7 @@ export class MeetingDetailComponent implements OnInit {
             .switchMap((parmas: Params) => this.meetingService.getMeetingDetail(+parmas['id']))
             .subscribe(meetingModel => {
                 this.meetingModel = meetingModel
-                console.log(this.meetingModel)
+                // console.log(this.meetingModel)
             })
     }
 }

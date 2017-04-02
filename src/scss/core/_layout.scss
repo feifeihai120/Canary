@@ -88,7 +88,7 @@ app-root {
     margin-left: $sidebar-width;
   }
   
-  .main-run-meeting {
+  .main-run-meeting, .app-footer  {
     margin-left: $aside-menu-width;
   }
 
@@ -183,7 +183,7 @@ app-root {
     }
 
     .main-run-meeting, .app-footer {
-      margin-right: 0;
+      margin-left: 0;
     }
   }
 }

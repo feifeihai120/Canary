@@ -22,8 +22,8 @@ detail:1
 eventPhase:0
 fromElement:null
 isTrusted:true
-layerX:65       ---------------------
-layerY:444      ---------------------
+layerX:65       ---------------------  相对于当前 layer 的 X 偏移量
+layerY:444      ---------------------  相对于当前 layer 的 Y 偏移量
 metaKey:false
 movementX:0     ---------------------
 movementY:0     ---------------------

@@ -27,7 +27,7 @@
         </div>
     </div>
     <ul class="nav navbar-nav mr-1">
-        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-close fa-lg"></i>&nbsp; 取消同屏</button> &nbsp;
+        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-close fa-lg"></i>&nbsp; 取消同屏</button>        &nbsp;
         <button type="button" class="btn btn-success btn-sm" (click)="leave()"><i class="fa fa-close fa-lg"></i>&nbsp; 退出会议</button>
     </ul>
 </header>
@@ -45,12 +45,13 @@
     </aside>
     <!-- Main content -->
     <main class="main-run-meeting pdf-bg ">
-        <div class="container-fluid pdf-bg ">
+        <p-growl [value]="msgs"></p-growl>
+        <div class="container-fluid">
             <!--<router-outlet></router-outlet>-->
-            <div class="animated pdf-bg fadeIn">
+            <div class="animated fadeIn">
                 <div class="card pdf-bg mt-1">
-                    <pdf-viewer #myPdfViewer [src]="pdfSrc" [page]="page" [original-size]="true" (click)="showCase($event)" [render-text]="false"
-                        (after-load-complete)="afterLoadComplete($event)" class="m-auto"></pdf-viewer>
+                    <pdf-viewer #myPdfViewer [src]="pdfSrc" [page]="page" [original-size]="true" (click)="next($event)" [render-text]="false"
+                        [zoom]="zoom" (after-load-complete)="afterLoadComplete($event)" class="m-auto"></pdf-viewer>
                 </div>
             </div>
         </div>

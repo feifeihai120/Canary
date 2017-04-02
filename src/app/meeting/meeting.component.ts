@@ -33,14 +33,12 @@ export class MeetingComponent implements OnInit {
   ngOnInit(): void {
     this.meetingService.getPageMeeting(this.getParmas())
       .then(meetingPage => {
-        console.log(meetingPage)
+        // console.log(meetingPage)
         this.total = meetingPage.total
         this.pages = Math.ceil(this.total / this.pageSize)
         this.meetings = meetingPage.list
         this.getPageNum()
       })
-    // this.meetingService.getLimitMeetings()
-    // .then(meetings => this.meetings = meetings)
   }
 
   /**

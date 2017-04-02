@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise'
 
 import { BaseUrl } from './url'
 import { User } from './user'
 import { LoginUser } from './login_user'
+import { HttpService } from './http.service'
 
 @Injectable()
 export class UserService {
@@ -13,7 +13,7 @@ export class UserService {
     private headers = new Headers({ 'Content-Type': 'application/json' })
 
     constructor(
-        private http: Http
+        private httpService: HttpService
     ) { }
 
     /**
@@ -21,32 +21,17 @@ export class UserService {
      * @param data user
      */
     login(loginUser: LoginUser): Promise<User> {
-        // console.log("login : ", loginUser)
-        return this.http.post(BaseUrl.getBaseUrl() + 'users/login', JSON.stringify(loginUser), { headers: this.headers })
+        return this.httpService.post(BaseUrl.getBaseUrl() + 'users/login', loginUser)
             .toPromise()
-            .then(res => {
-                console.log('res.headers.keys: ' + res.headers.keys());
-                console.log('res.headers["Set-Cookie"]: ', res.headers.get('Set-Cookie'))
-                console.log('res : ' + res)
-                return res.json()
-            })
-            .catch(this.handleError)
+            .then(res => res)
     }
 
     /**
      * 用户退出 登录
      */
     logout(): Promise<Boolean> {
-        return this.http.get(BaseUrl.getBaseUrl() + 'users/logout')
+        return this.httpService.post(BaseUrl.getBaseUrl() + 'users/logout', null)
             .toPromise()
-            .then(() => true)
-            .catch(this.handleError)
-    }
-
-    private handleError(error: any) {
-        let errMsg = (error.message) ? error.message :
-            error.status ? `error.status - error.statusText` : 'Server error';
-        console.error(errMsg); // log to console instead
-        return Promise.reject(errMsg)
+            .then(b => b)
     }
 }

@@ -4,6 +4,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router'
 
 import 'rxjs/add/operator/switchMap'
 
+import { Message } from 'primeng/primeng'
+
 import { MeetingService } from '../service/meeting.service'
 import { MeetingModel } from '../service/meeting_model'
 
@@ -32,6 +34,7 @@ export class PdfComponent implements OnInit {
     private pdfSrc: string = 'http://localhost:9009/api/file/files/pdf-test.pdf'
     private page: number = 1
     private scale: number = 1.0
+    private zoom: number = 1.0;
     private rotate: number = 0.0
     constructor(
         private route: ActivatedRoute,
@@ -56,6 +59,36 @@ export class PdfComponent implements OnInit {
         pdf.getPage(this.page)
             .then(page => this.pdfViewPort = page.getViewport(this.scale, this.rotate))
         console.log(pdf)
+    }
+
+    private msgs: Message[] = [];
+    /**
+     * 根据鼠标点击事件 翻页
+     */
+    next($event: MouseEvent) {
+        console.log($event)
+        console.log(this.pdfViewPort)
+        if ($event.layerX < this.pdfViewPort.width / 2) {
+            this.lastPage()
+        } else {
+            this.nextPage()
+        }
+    }
+
+    private nextPage() {
+        if (this.pdf.numPages <= this.page) {
+            this.msgs.push({ severity: 'warn', summary: '', detail: '已经到最后一页了' })
+        } else {
+            this.page += 1
+        }
+    }
+
+    private lastPage() {
+        if (this.page <= 1) {
+            this.msgs.push({ severity: 'warn', summary: '', detail: '已经到第一页了' })
+        } else {
+            this.page -= 1
+        }
     }
 
     /**

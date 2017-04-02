@@ -40,6 +40,7 @@ import { LoginComponent } from './pages/login.component'
 
 // service
 import { UserService } from './service/user.service'
+import { HttpService } from './service/http.service'
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import { UserService } from './service/user.service'
     useClass: HashLocationStrategy
   },
     UserService,
-    CookieService],
+    CookieService,
+    HttpService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
