@@ -13,6 +13,9 @@ import { PdfViewerComponent } from 'ng2-pdf-viewer';
 // primeng
 import { GrowlModule } from 'primeng/primeng';
 
+// socket
+import { StompService } from 'ng2-stomp-service';
+
 // shared
 import { AsideToggleDirective } from '../shared/aside.directive';
 
@@ -33,6 +36,6 @@ import { MeetingService } from '../service/meeting.service'
         GrowlModule
     ],
     declarations: [PdfComponent, AsideToggleDirective, PdfViewerComponent],
-    providers: [MeetingService],
+    providers: [MeetingService, StompService],
 })
 export class RunMeetingModule { }

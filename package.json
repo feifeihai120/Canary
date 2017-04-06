@@ -42,7 +42,10 @@
     "ng2-webstorage": "1.5.1",
     "ngrx-store-localstorage": "0.1.5",
     "primeng": "2.0.5",
-    "font-awesome": "4.7.0"
+    "font-awesome": "4.7.0",
+    "stompjs": "^2.3.3",
+    "ng2-stomp-service": "^1.0.4",
+    "sockjs-client": "^1.1.2"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0-rc.1",

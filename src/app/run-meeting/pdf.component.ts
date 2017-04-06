@@ -6,8 +6,11 @@ import 'rxjs/add/operator/switchMap'
 
 import { Message } from 'primeng/primeng'
 
+import { StompService } from 'ng2-stomp-service';
+
 import { MeetingService } from '../service/meeting.service'
 import { MeetingModel } from '../service/meeting_model'
+import { PageNotice } from '../service/page_notice'
 
 @Component({
     moduleId: module.id,
@@ -36,18 +39,45 @@ export class PdfComponent implements OnInit {
     private scale: number = 1.0
     private zoom: number = 1.0;
     private rotate: number = 0.0
+
+    private subscription: any;
+    private wsConf = {
+        host: 'http://localhost:9009/meeting-ws',
+        debug: true
+    }
     constructor(
         private route: ActivatedRoute,
         private meetingService: MeetingService,
-        private router: Router) { }
+        private router: Router,
+        private stomp: StompService) { }
 
     ngOnInit() {
         this.route.params
             .switchMap((parmas: Params) => this.meetingService.getMeetingDetail(+parmas['id']))
             .subscribe(meetingModel => {
                 this.meetingModel = meetingModel
-                console.log(this.meetingModel)
+                // console.log(this.meetingModel)
+
+                this.stomp.configure(this.wsConf);
+                this.stomp.startConnect().then(() => {
+                    console.log('connected');
+                    // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
+                    this.subscription = this.stomp.subscribe(`/meeting/next-page/${this.meetingModel.meeting.id}/1/1`, this.response)
+                });
+
             })
+    }
+
+    private pageNotice: PageNotice
+    //Response
+    public response = (page) => {
+        if (this.async) {
+            console.log("收到的----")
+            console.log(page)
+            this.pageNotice = page
+            console.log("curr page should be: " + this.pageNotice.page)
+            this.page = this.pageNotice.page
+        }
     }
 
     private pdf: PDFDocumentProxy
@@ -62,6 +92,11 @@ export class PdfComponent implements OnInit {
     }
 
     private msgs: Message[] = [];
+
+    // 是否开启 材料同步
+    private async: boolean = true
+
+    private currMaterialId: number
     /**
      * 根据鼠标点击事件 翻页
      */
@@ -80,6 +115,16 @@ export class PdfComponent implements OnInit {
             this.msgs.push({ severity: 'warn', summary: '', detail: '已经到最后一页了' })
         } else {
             this.page += 1
+
+            this.stomp.send('/app/meeting.change-page',
+                JSON.stringify(
+                    {
+                        'meetingId': this.meetingModel.meeting.id,
+                        'topicId': 1,
+                        'materialId': 1,
+                        'page': this.page
+                    }
+                ));
         }
     }
 
@@ -88,6 +133,16 @@ export class PdfComponent implements OnInit {
             this.msgs.push({ severity: 'warn', summary: '', detail: '已经到第一页了' })
         } else {
             this.page -= 1
+
+            this.stomp.send('/app/meeting.change-page',
+                JSON.stringify(
+                    {
+                        'meetingId': this.meetingModel.meeting.id,
+                        'topicId': 1,
+                        'materialId': 1,
+                        'page': this.page
+                    }
+                ));
         }
     }
 
@@ -96,8 +151,34 @@ export class PdfComponent implements OnInit {
      */
     leave() {
         this.router.navigateByUrl('/meeting/meetingList')
+        this.subscription.unsubscribe()
+        this.stomp.disconnect().then(() => {
+            console.log('Connection closed')
+        })
     }
 
+    /**
+     * 材料同步 开关
+     */
+    asyncMaterial() {
+        this.async = !this.async
+    }
+
+    /**
+     * 切换材料
+     */
+    changeMaterial() {
+        // 关闭当前同步材料订阅并打开新的材料订阅
+    }
+
+    /**
+     * 切换议题， 议题切换后，当前议题的状态即置为 已结束
+     */
+    changeTopic() {
+        // 1. 提示是否切换
+
+        // 2. 切换：发送切换议题的请求 --> 关闭当前同步订阅并打开新的订阅
+    }
 
 
 
