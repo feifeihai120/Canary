@@ -162,6 +162,12 @@ export class PdfComponent implements OnInit {
      */
     asyncMaterial() {
         this.async = !this.async
+        if (this.async) {
+            // 这里应该自动同步到 主持人 的状态
+            // 主持人正在讲的 材料
+            // 主持人正在讲的 材料的 当前页
+            
+        }
     }
 
     /**
