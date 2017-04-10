@@ -34,8 +34,10 @@
                   <i class="fa fa-star"></i>&nbsp; 查看</button> &nbsp;
                   <button type="button" class="btn btn-secondary" (click)="deleteMeeting(meeting.id)">
                   <i class="fa fa-close fa-lg"></i>&nbsp; 删除</button> &nbsp;
-                  <button type="button" class="btn btn-success" (click)="enterMeeting(meeting.id)">
+                  <button type="button" class="btn btn-success" (click)="enterMeeting(meeting.id)" *ngIf="meeting.joined" >
                   <i class="fa fa-play-circle-o fa-lg"></i>&nbsp; 进入</button>
+                  <button type="button" class="btn btn-success" (click)="joinMeeting(meeting.id)" *ngIf="!meeting.joined" >
+                  <i class="fa fa-play-circle-o fa-lg"></i>&nbsp; 参加</button>
                 </td>
               </tr>
             </tbody>

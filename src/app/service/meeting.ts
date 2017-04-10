@@ -2,9 +2,11 @@ export class Meeting {
     id: number;
     name: string;
     meetingTopics: string;
+    topics: string[]
     meetingDesc: string;
     typeId: number;
     typeName: string;
+    theme: string
     roomId: number;
     roomName: string;
     managerId: number;

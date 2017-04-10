@@ -9,6 +9,7 @@ export class MeetingMaterial {
     materialFullName: string
     materialLocation: string
     materialSize: number
+    pageNum: number
     unit: number
     unitDisplay: string
     status: number

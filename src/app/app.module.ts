@@ -16,7 +16,6 @@ import { TabsModule } from 'ng2-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 // primeng
-import { AccordionModule } from 'primeng/primeng'
 import { SharedModule } from 'primeng/primeng';
 
 // shared
@@ -53,7 +52,6 @@ import { HttpService } from './service/http.service'
     RouterModule,
     AppRoutingModule,
     Ng2Webstorage,
-    AccordionModule,
     SharedModule
   ],
   declarations: [

@@ -62,4 +62,13 @@ export class MeetingService {
             .then(meetingModel => meetingModel)
     }
 
+    /**
+     * 更新一个会议
+     */
+    update(meeting: Meeting): Promise<Boolean> {
+        return this.httpService.put(BaseUrl.getBaseUrl() + 'meeting', meeting)
+        .toPromise()
+        .then(it => true)
+    }
+
 }

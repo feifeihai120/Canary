@@ -34,7 +34,6 @@ export class NewMeetingComponent implements OnInit {
     ngOnInit() {
         this.meetingService.getNewMeetingInfo()
             .then(newMeetingInfo => {
-                console.log(newMeetingInfo)
                 this.meetingRooms = newMeetingInfo.meetingRooms
                 this.meetingTypes = newMeetingInfo.meetingTypes
             })

@@ -7,8 +7,11 @@ import { FormsModule } from '@angular/forms'
 // tabs
 import { TabsModule } from 'ng2-bootstrap/tabs';
 
-// 时间 控件
+// primeng
 import { CalendarModule } from 'primeng/primeng'
+import { ChipsModule } from 'primeng/primeng';
+import { AccordionModule } from 'primeng/primeng'
+import { FileUploadModule } from 'primeng/primeng';
 
 // 功能 组件
 import { MeetingComponent } from './meeting.component';
@@ -28,6 +31,9 @@ import { MeetingService } from '../service/meeting.service'
     RouterModule,
     FormsModule,
     CalendarModule,
+    ChipsModule,
+    AccordionModule,
+    FileUploadModule,
     TabsModule
   ],
   declarations: [
