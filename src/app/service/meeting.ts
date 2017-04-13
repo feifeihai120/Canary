@@ -27,6 +27,7 @@ export class Meeting {
     signInDisplay: string;
     autoDelete: boolean = false;
     autoDeleteDisplay: string;
+    joined: boolean
     createdAt: string;
     updatedAt: string;
 }

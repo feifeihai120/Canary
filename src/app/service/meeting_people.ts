@@ -8,6 +8,8 @@ export class MeetingPeople {
     userName: string
     enterTime: string
     leaveTime: string
+    inMeeting: number
+    inMeetingDisplay: string
     createdAt: string
     updatedAt: string
 }

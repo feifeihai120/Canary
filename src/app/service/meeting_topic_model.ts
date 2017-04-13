@@ -1,9 +1,9 @@
-import { MeetingPeople } from './meeting_people'
-import { MeetingMaterial } from './meeting_material'
+import { MeetingPeoplePage } from './meeting_people_page'
+import { MeetingMaterialPage } from './meeting_material_page'
 
 export class MeetingTopicModel {
     id: number
     name: string
-    meetingPeople: MeetingPeople[]
-    meetingMaterials: MeetingMaterial[]
+    meetingPeoplePageInfo: MeetingPeoplePage 
+    meetingMaterialPageInfo: MeetingMaterialPage 
 }

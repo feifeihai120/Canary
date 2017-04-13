@@ -4,12 +4,16 @@ import { Router, ActivatedRoute, Params } from '@angular/router'
 
 import 'rxjs/add/operator/switchMap'
 
+// storage
+import { SessionStorage } from 'ng2-webstorage';
+
 import { Message } from 'primeng/primeng'
 
 import { StompService } from 'ng2-stomp-service';
 
+import { User } from '../service/user'
 import { MeetingService } from '../service/meeting.service'
-import { MeetingModel } from '../service/meeting_model'
+import { MeetingSimpleModel } from '../service/meeting_simple_model'
 import { PageNotice } from '../service/page_notice'
 
 @Component({
@@ -32,7 +36,8 @@ export class PdfComponent implements OnInit {
         this.status.isopen = !this.status.isopen;
     }
 
-    private meetingModel: MeetingModel
+    @SessionStorage() private currUser: User
+    private meetingSimpleModel: MeetingSimpleModel = new MeetingSimpleModel()
 
     private pdfSrc: string = 'http://localhost:9009/api/file/files/pdf-test.pdf'
     private page: number = 1
@@ -40,7 +45,8 @@ export class PdfComponent implements OnInit {
     private zoom: number = 1.0;
     private rotate: number = 0.0
 
-    private subscription: any;
+    // 订阅 材料同步信息
+    private subMaterialAsync: any
     private wsConf = {
         host: 'http://localhost:9009/meeting-ws',
         debug: true
@@ -53,16 +59,16 @@ export class PdfComponent implements OnInit {
 
     ngOnInit() {
         this.route.params
-            .switchMap((parmas: Params) => this.meetingService.getMeetingDetail(+parmas['id']))
-            .subscribe(meetingModel => {
-                this.meetingModel = meetingModel
-                // console.log(this.meetingModel)
+            .switchMap((parmas: Params) => this.meetingService.getMeetingSimpleModel(+parmas['id']))
+            .subscribe(meetingSimpleModel => {
+                this.meetingSimpleModel = meetingSimpleModel
+                console.log(this.meetingSimpleModel)
 
                 this.stomp.configure(this.wsConf);
                 this.stomp.startConnect().then(() => {
                     console.log('connected');
                     // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
-                    this.subscription = this.stomp.subscribe(`/meeting/next-page/${this.meetingModel.meeting.id}/1/1`, this.response)
+                    this.subMaterialAsync = this.stomp.subscribe(`/meeting/next-page/${this.meetingSimpleModel.meeting.id}/1/1`, this.response)
                 });
 
             })
@@ -119,7 +125,7 @@ export class PdfComponent implements OnInit {
             this.stomp.send('/app/meeting.change-page',
                 JSON.stringify(
                     {
-                        'meetingId': this.meetingModel.meeting.id,
+                        'meetingId': this.meetingSimpleModel.meeting.id,
                         'topicId': 1,
                         'materialId': 1,
                         'page': this.page
@@ -137,7 +143,7 @@ export class PdfComponent implements OnInit {
             this.stomp.send('/app/meeting.change-page',
                 JSON.stringify(
                     {
-                        'meetingId': this.meetingModel.meeting.id,
+                        'meetingId': this.meetingSimpleModel.meeting.id,
                         'topicId': 1,
                         'materialId': 1,
                         'page': this.page
@@ -150,11 +156,30 @@ export class PdfComponent implements OnInit {
      * 离开会议
      */
     leave() {
-        this.router.navigateByUrl('/meeting/meetingList')
-        this.subscription.unsubscribe()
-        this.stomp.disconnect().then(() => {
-            console.log('Connection closed')
-        })
+        this.stomp.send('/app/leave', JSON.stringify(
+            {
+                'meetingId': this.meetingSimpleModel.meeting.id,
+                'topicId': this.meetingSimpleModel.topicId,
+                'userId': this.currUser.id
+            }
+        ))
+        this.unSubscribe()
+    }
+
+    /**
+     * 会议管理员 结束会议
+     */
+    finish() {
+        this.meetingService.finishMeeting(this.meetingSimpleModel.meeting.id)
+            .then(b => this.unSubscribe())
+    }
+
+    /**
+     * 会议管理员 关闭会议
+     */
+    close() {
+        this.meetingService.closeMeeting(this.meetingSimpleModel.meeting.id)
+            .then(b => b)
     }
 
     /**
@@ -166,7 +191,7 @@ export class PdfComponent implements OnInit {
             // 这里应该自动同步到 主持人 的状态
             // 主持人正在讲的 材料
             // 主持人正在讲的 材料的 当前页
-            
+
         }
     }
 
@@ -184,6 +209,14 @@ export class PdfComponent implements OnInit {
         // 1. 提示是否切换
 
         // 2. 切换：发送切换议题的请求 --> 关闭当前同步订阅并打开新的订阅
+    }
+
+    private unSubscribe() {
+        this.subMaterialAsync.unsubscribe()
+        this.stomp.disconnect().then(() => {
+            console.log('Connection closed')
+            this.router.navigateByUrl('/meeting/meetingList')
+        })
     }
 
 

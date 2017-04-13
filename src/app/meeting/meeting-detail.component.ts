@@ -11,8 +11,12 @@ import { MeetingModel } from '../service/meeting_model'
 import { Meeting } from '../service/meeting'
 import { MeetingRoom } from '../service/meeting_room'
 import { MeetingType } from '../service/meeting_type'
+import { MeetingTopic } from '../service/meeting_topic'
 import { MeetingTopicModel } from '../service/meeting_topic_model'
+import { MeetingPeoplePage } from '../service/meeting_people_page'
+import { MeetingMaterialPage } from '../service/meeting_material_page'
 import { MeetingService } from '../service/meeting.service'
+import { MeetingMaterialService } from '../service/meeting_material.service'
 
 import { BaseUrl } from '../service/url'
 
@@ -29,19 +33,23 @@ export class MeetingDetailComponent implements OnInit {
     private meetingRooms: MeetingRoom[]
     private meetingTypes: MeetingType[]
 
-    private meetingTopicModels: MeetingTopicModel[]
+    private meetingTopics: MeetingTopic[]
 
     private uploadedFiles: any[] = []
     private uploaded: Boolean = false
     private currMeetingId: number = 0
+    private currTopicId: number = 0
     private oneClick: boolean = false
     private filesUrl = BaseUrl.getBaseUrl() + 'file/more/'
+    private finalFilesUrl = ''
     private fileUrl = BaseUrl.getBaseUrl() + 'file/'
+    private finalFileUrl = ''
     private edited: Boolean = false
 
     constructor(
         private route: ActivatedRoute,
         private meetingService: MeetingService,
+        private meetingMaterialService: MeetingMaterialService,
         private location: Location) {
         this.meeting = new Meeting()
         this.newMeeting = new Meeting()
@@ -62,7 +70,7 @@ export class MeetingDetailComponent implements OnInit {
                 this.newMeeting = this.copy(this.meeting)
                 this.meetingRooms = meetingModel.meetingRooms
                 this.meetingTypes = meetingModel.meetingTypes
-                this.meetingTopicModels = meetingModel.meetingTopicModels
+                this.meetingTopics = meetingModel.meetingTopics
             })
     }
 
@@ -92,16 +100,6 @@ export class MeetingDetailComponent implements OnInit {
         this.newMeeting = this.copy(this.meeting)
     }
 
-    /**
-     * 选择 议题
-     * @param topicId 议题id
-     */
-    chooseTopic(topicId: number) {
-        if (!this.oneClick) {
-            this.filesUrl += (this.currMeetingId + '/' + topicId)
-            this.oneClick = !this.oneClick
-        }
-    }
 
     /**
      * 显示/隐藏材料上传面板
@@ -120,21 +118,68 @@ export class MeetingDetailComponent implements OnInit {
     }
 
     /**
-     * 上传材料
+     * 上传材料:当文件上传完成 回调
      */
     upload(event) {
         for (let file of event.files) {
             this.uploadedFiles.push(file);
         }
+        // 刷新 材料列表
+        this.refresh()
     }
 
     /**
      * 刷新列表
      */
     refresh() {
-
+        this.meetingMaterialService.pageMaterial(this.currTopicId, this.currPageNo, this.currPageSize)
+            .then(meetingDetarialPage => this.meetingMaterialPageInfo = meetingDetarialPage)
     }
 
+
+
+    // private meetingTopicModel: MeetingTopicModel
+    private meetingPeoplePageInfo: MeetingPeoplePage = new MeetingPeoplePage()
+    private meetingMaterialPageInfo: MeetingMaterialPage = new MeetingMaterialPage()
+    /**
+     * 选择 议题
+     * @param topicId 议题id
+     */
+    chooseTopic(event) {
+        this.currTopicId = this.meetingTopics[event.index].id
+        this.finalFilesUrl = this.filesUrl + (this.currMeetingId + '/' + this.currTopicId)
+        // 查询并显示 当前议题的信息
+        this.meetingService.getMeetingTopicModel(this.currMeetingId, this.currTopicId)
+            .then(meetingTopicModel => {
+                this.meetingPeoplePageInfo = meetingTopicModel.meetingPeoplePageInfo
+                this.meetingMaterialPageInfo = meetingTopicModel.meetingMaterialPageInfo
+            })
+    }
+
+    private currPageNo = 1
+    private currPageSize = 10
+    /**
+     * 请求换页
+     * @param event 换页事件
+     */
+    paginate(event) {
+        console.log(event)
+        this.currPageNo = event.page + 1
+        this.currPageSize = event.rows
+        this.meetingMaterialService.pageMaterial(this.currTopicId, event.page + 1, event.rows)
+            .then(meetingDetarialPage => this.meetingMaterialPageInfo = meetingDetarialPage)
+    }
+
+    /**
+     * 删除 材料
+     */
+    deleteMaterial(materialId: number) {
+        this.meetingMaterialService.deleteMaterial(materialId)
+            .then(b => {
+                console.log('delete success')
+                this.refresh()
+            })
+    }
 
     copy(meeting: Meeting): Meeting {
         let m: Meeting = new Meeting()

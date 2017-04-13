@@ -13,10 +13,22 @@ export class HttpService {
 
     constructor(private http: Http) { }
 
+    public getParmas(parmaMap: Map<string, any>): URLSearchParams {
+        console.log(parmaMap)
+        let params: URLSearchParams = new URLSearchParams();
+        parmaMap.forEach((value, key) => {
+            params.set(key, value.toString());
+            console.log('key' + key)
+            console.log('value' + value)
+        })
+        console.log(params)
+        return params
+    }
+
     /**
      * 利用 http 发送 GET request
      * @param url 请求地址
-     * @param parmas 查询参数
+     * @param parmas 查询参数  String | URLSearchParams
      */
     get(url: string, parmas: any): Observable<any> {
         return this.http.get(url, { search: parmas, headers: this.headers, withCredentials: true })

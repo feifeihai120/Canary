@@ -129,8 +129,8 @@
                 </tab>
                 <tab>
                     <template tabHeading><i class="icon-calculator"></i> 会议议题 &nbsp;</template>
-                    <p-accordion>
-                        <p-accordionTab header="{{meetingTopicModel.name}}" *ngFor="let meetingTopicModel of meetingTopicModels" (click)="chooseTopic(meetingTopicModel.id)">
+                    <p-accordion (onOpen)="chooseTopic($event)">
+                        <p-accordionTab header="{{meetingTopic.name}}" *ngFor="let meetingTopic of meetingTopics">
                             <tabset>
                                 <tab>
                                     <template tabHeading><i class="icon-list"></i> 会议材料 &nbsp;</template>
@@ -139,15 +139,15 @@
                                         &nbsp;
                                         <button type="button" class="btn btn-secondary" (click)="showOrHideUpload()" *ngIf="uploaded"><i class="fa fa-star"></i>&nbsp; 隐藏上传</button>&nbsp;
                                         &nbsp;
-                                        <button type="button" class="btn btn-success" click="refresh()"><i class="fa fa-magic"></i>&nbsp; 刷新列表</button>
+                                        <button type="button" class="btn btn-success" (click)="refresh()"><i class="fa fa-magic"></i>&nbsp; 刷新列表</button>
                                     </div>
                                     <div class="row" *ngIf="uploaded">
                                         <div class="col-lg-12">
                                             <div class="card-block">
                                                 <!--多文件上传-->
-                                                <p-fileUpload name="files" multiple="multiple" url="{{filesUrl}}" (onUpload)="upload($event)" (onBeforeSend)="addHeaders($event)">
-                                                <!--单文件上传-->
-                                                <!--<p-fileUpload name="file" url="{{fileUrl}}" (onUpload)="upload($event)">-->
+                                                <p-fileUpload name="files" multiple="multiple" url="{{finalFilesUrl}}" (onUpload)="upload($event)" (onBeforeSend)="addHeaders($event)">
+                                                    <!--单文件上传-->
+                                                    <!--<p-fileUpload name="file" url="{{finalFileUrl}}" (onUpload)="upload($event)">-->
                                                     <template pTemplate="content">
                                                         <ul *ngIf="uploadedFiles.length">
                                                             <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
@@ -163,6 +163,7 @@
                                                 <table class="table table-bordered table-striped table-condensed">
                                                     <thead>
                                                         <tr>
+                                                            <th><input type="checkbox" name="checkAll"></th>
                                                             <th>文件名</th>
                                                             <th>页数</th>
                                                             <th>大小</th>
@@ -172,33 +173,25 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr *ngFor="let material of meetingTopicModels.meetingMaterials">
+                                                        <tr *ngFor="let material of meetingMaterialPageInfo.list">
+                                                            <td><input type="checkbox" name="check"></td>
                                                             <td>{{material.materialFullName}}</td>
                                                             <td>{{material.pageNum}}</td>
-                                                            <td>{{material.materialSize}}</td>
+                                                            <td>{{material.materialSize}} &nbsp; &nbsp; {{material.unitDisplay}}</td>
                                                             <td>{{material.statusDisplay}}</td>
                                                             <td>{{material.downloadAuthDisplay}}</td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary" (click)="lookMaterial(material.id)">
-                                                                <i class="fa fa-star"></i>&nbsp; 查看</button>                                                                &nbsp;
+                                                                <i class="fa fa-star"></i>&nbsp; 查看</button> &nbsp;
+                                                                <button type="button" class="btn btn-success" (click)="downloadMaterial(material.id)">
+                                                                <i class="fa fa-download fa-lg"></i>&nbsp; 下载</button> &nbsp;
                                                                 <button type="button" class="btn btn-secondary" (click)="deleteMaterial(material.id)">
-                                                                <i class="fa fa-close fa-lg"></i>&nbsp; 删除</button>                                                                &nbsp;
+                                                                <i class="fa fa-close fa-lg"></i>&nbsp; 删除</button> &nbsp;
                                                             </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <nav>
-                                                    <ul class="pagination">
-                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">Prev</a></li>
-                                                        <li class="page-item active">
-                                                            <a class="page-link" href="javascript:void(0);">1</a>
-                                                        </li>
-                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-                                                    </ul>
-                                                </nav>
+                                                <p-paginator rows="{{meetingMaterialPageInfo.pageSize || 1}}" totalRecords="{{meetingMaterialPageInfo.total || 0}}" (onPageChange)="paginate($event)"></p-paginator>
                                             </div>
                                         </div>
                                         <!--/.col-->
@@ -234,24 +227,12 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <nav>
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">Prev</a></li>
-                                                            <li class="page-item active">
-                                                                <a class="page-link" href="javascript:void(0);">1</a>
-                                                            </li>
-                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">4</a></li>
-                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
-                                                        </ul>
-                                                    </nav>
                                                 </div>
                                             </div>
+                                            <!--/.col-->
                                         </div>
-                                        <!--/.col-->
+                                        <!--/.row-->
                                     </div>
-                                    <!--/.row-->
                                 </tab>
                             </tabset>
                         </p-accordionTab>
@@ -310,8 +291,8 @@
                     <!--/.row-->
                 </tab>
             </tabset>
+            </div>
+            <!--/.col-->
         </div>
-        <!--/.col-->
+        <!--/.row-->
     </div>
-    <!--/.row-->
-</div>
