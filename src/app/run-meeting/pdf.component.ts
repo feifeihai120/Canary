@@ -45,8 +45,13 @@ export class PdfComponent implements OnInit {
     private zoom: number = 1.0;
     private rotate: number = 0.0
 
-    // 订阅 材料同步信息
+    // 订阅 材料同步 通知
     private subMaterialAsync: any
+    private subMeetingParticipants: any // 订阅 参会人员 列表 通知
+    private subMeetingPeopleEnter: any // 订阅 参会人员 入会 通知
+    private subMeetingPeopleLeave: any // 订阅 参会人员 离会 通知
+    private subChangeMaterial: any // 订阅 材料改变 通知
+    private subChangeTopic: any // 订阅 切换议题 通知
     private wsConf = {
         host: 'http://localhost:9009/meeting-ws',
         debug: true
@@ -68,22 +73,68 @@ export class PdfComponent implements OnInit {
                 this.stomp.startConnect().then(() => {
                     console.log('connected');
                     // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
-                    this.subMaterialAsync = this.stomp.subscribe(`/meeting/next-page/${this.meetingSimpleModel.meeting.id}/1/1`, this.response)
+                    this.subMaterialAsync = this.stomp.subscribe(
+                        `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}/${this.currMaterialId}`,
+                        this.nextPageResponse
+                    )
+                    // 订阅当前 会议的 参会人员列表 /meeting/meeting.participants/meetingId/topicId
+                    this.subMeetingParticipants = this.stomp.subscribe(
+                        `/meeting/meeting.participants/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        this.participantResponse
+                    )
+                    // 订阅 参会人员 加入会议 /meeting/enter/meetingId/topicId
+                    this.subMeetingPeopleEnter = this.stomp.subscribe(
+                        `/meeting/join/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        this.joinResponse
+                    )
+                    // 订阅 参会人员 中途离会 /meeting/leave/meetingId/topicId
+                    this.subMeetingPeopleLeave = this.stomp.subscribe(
+                        `/meeting/leave/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        this.leaveResponse
+                    )
+                    // 请求 参会人员 到场 列表
+                    this.stomp.send('/app/meeting.participants',
+                        JSON.stringify(
+                            {
+                                'meetingId': this.meetingSimpleModel.meeting.id,
+                                'topicId': this.meetingSimpleModel.topicId,
+                                'userId': this.currUser.id
+                            }
+                        ))
                 });
-
             })
     }
 
     private pageNotice: PageNotice
-    //Response
-    public response = (page) => {
+    // 处理 换页通知
+    public nextPageResponse = (page) => {
         if (this.async) {
-            console.log("收到的----")
-            console.log(page)
             this.pageNotice = page
-            console.log("curr page should be: " + this.pageNotice.page)
             this.page = this.pageNotice.page
         }
+    }
+
+    private onlines: number[] = []
+    // 处理 参会人员 列表 通知
+    public participantResponse = (participants) => {
+        console.log(participants)
+        this.onlines = participants
+    }
+
+    // 处理 参会人员 加入会议 通知
+    public joinResponse = (user) => {
+        console.log(user)
+        this.meetingSimpleModel.users.push(user)
+    }
+
+    // 处理 参会人员 中途 离会 通知
+    public leaveResponse = (leave) => {
+        console.log(leave)
+        this.onlines = this.onlines.filter(id => id !== leave.userId)
+    }
+
+    public isOnline(userId: number): boolean {
+        return this.onlines.includes(userId)
     }
 
     private pdf: PDFDocumentProxy
@@ -102,7 +153,7 @@ export class PdfComponent implements OnInit {
     // 是否开启 材料同步
     private async: boolean = true
 
-    private currMaterialId: number
+    private currMaterialId: number = 1
     /**
      * 根据鼠标点击事件 翻页
      */
@@ -156,14 +207,8 @@ export class PdfComponent implements OnInit {
      * 离开会议
      */
     leave() {
-        this.stomp.send('/app/leave', JSON.stringify(
-            {
-                'meetingId': this.meetingSimpleModel.meeting.id,
-                'topicId': this.meetingSimpleModel.topicId,
-                'userId': this.currUser.id
-            }
-        ))
-        this.unSubscribe()
+        this.meetingService.leaveMeeting(this.meetingSimpleModel.meeting.id, this.meetingSimpleModel.topicId)
+            .then(b => this.unSubscribe())
     }
 
     /**
@@ -213,6 +258,9 @@ export class PdfComponent implements OnInit {
 
     private unSubscribe() {
         this.subMaterialAsync.unsubscribe()
+        this.subMeetingParticipants.unsubscribe()
+        this.subMeetingPeopleEnter.unsubscribe()
+        this.subMeetingPeopleLeave.unsubscribe()
         this.stomp.disconnect().then(() => {
             console.log('Connection closed')
             this.router.navigateByUrl('/meeting/meetingList')

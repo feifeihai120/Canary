@@ -40,16 +40,15 @@
     <aside class="aside-menu">
         <tabset>
             <tab>
-                <template tabHeading>会议材料</template>
+                <template tabHeading>参会人员</template>
                 <div class="animated fadeIn">
                     <div class="row">
                         <div class="col-md-12 m-auto">
                             <ul class="list-group">
-                                <li class="list-group-item list-group-item-action">material 1 &nbsp;<span class="badge badge-info">观看中</span></li>
-                                <li class="list-group-item list-group-item-action">material 2</li>
-                                <li class="list-group-item list-group-item-action">material 3</li>
-                                <li class="list-group-item list-group-item-action">material 4</li>
-                                <li class="list-group-item list-group-item-action">material 5</li>
+                                <li class="list-group-item list-group-item-action" *ngFor="let user of meetingSimpleModel.users">{{user.username}} &nbsp;
+                                    <span class="badge badge-success" *ngIf="meetingSimpleModel.meeting.managerId === user.id">主持人</span>                                    &nbsp;
+                                    <span class="badge badge-info" *ngIf="isOnline(user.id)">在线</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -57,14 +56,13 @@
                 </div>
             </tab>
             <tab>
-                <template tabHeading>参会人员</template>
+                <template tabHeading>会议材料</template>
                 <div class="animated fadeIn">
                     <div class="row">
                         <div class="col-md-12 m-auto">
                             <ul class="list-group">
-                                <li class="list-group-item list-group-item-action" *ngFor="let people of meetingSimpleModel.meetingPeople">{{people.userName}} &nbsp;
-                                    <span class="badge badge-info" *ngIf="meetingSimpleModel.meeting.managerId === people.id">主持人</span> &nbsp;
-                                    <span class="badge badge-info" *ngIf="people.inMeeting === 1">在线</span>
+                                <li class="list-group-item list-group-item-action" *ngFor="let material of meetingSimpleModel.meetingMaterials">{{material.materialFullName}} &nbsp;
+                                    <span class="badge badge-info">观看中</span>
                                 </li>
                             </ul>
                         </div>

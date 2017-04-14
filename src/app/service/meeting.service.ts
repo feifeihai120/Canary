@@ -137,8 +137,19 @@ export class MeetingService {
     /**
      * 删除一个会议
      */
-    deleteMeeting(meetingId: number) {
+    deleteMeeting(meetingId: number): Promise<boolean> {
         return this.httpService.delete(`${BaseUrl.getBaseUrl()}meeting/${meetingId}`)
+            .toPromise()
+            .then(it => it)
+    }
+
+    /**
+     * 用户离开会议
+     * @param meetingId 会议
+     * @param topicId 
+     */
+    leaveMeeting(meetingId: number, topicId: number): Promise<boolean> {
+        return this.httpService.put(`${BaseUrl.getBaseUrl()}run-meeting/leave/${meetingId}/${topicId}`, null)
             .toPromise()
             .then(it => it)
     }

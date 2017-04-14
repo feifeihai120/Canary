@@ -1,6 +1,6 @@
 import { Meeting } from './meeting'
 import { MeetingTopic } from './meeting_topic'
-import { MeetingPeople } from './meeting_people'
+import { User } from './user'
 import { MeetingMaterial } from './meeting_material'
 
 export class MeetingSimpleModel {
@@ -8,6 +8,6 @@ export class MeetingSimpleModel {
     topics: MeetingTopic[] = []
     topicId: number
     topicName: string
-    meetingPeople: MeetingPeople[] = []
+    users: User[] = []
     meetingMaterials: MeetingMaterial[] = []
 }
