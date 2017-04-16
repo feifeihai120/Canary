@@ -6,6 +6,10 @@ export class MeetingPeople {
     topicName: number
     userId: number
     userName: string
+    groupId: number
+    groupName: string
+    role: number
+    roleDisplay: string
     enterTime: string
     leaveTime: string
     inMeeting: number
