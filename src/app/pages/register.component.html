@@ -8,30 +8,35 @@
             <p class="text-muted">Create your account</p>
             <div class="input-group mb-1">
               <span class="input-group-addon"><i class="icon-user"></i></span>
-              <input type="text" class="form-control" placeholder="Username">
+              <input type="text" class="form-control" placeholder="Username" [(ngModel)]="registerUser.username">
             </div>
 
             <div class="input-group mb-1">
               <span class="input-group-addon">@</span>
-              <input type="text" class="form-control" placeholder="Email">
+              <input type="text" class="form-control" placeholder="Email" [(ngModel)]="registerUser.email">
+            </div>
+
+            <div class="input-group mb-1">
+              <span class="input-group-addon"><i class="icon-phone"></i></span>
+              <input type="text" class="form-control" placeholder="Phone" [(ngModel)]="registerUser.phone">
             </div>
 
             <div class="input-group mb-1">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" class="form-control" placeholder="Password" [(ngModel)]="registerUser.password">
             </div>
 
             <div class="input-group mb-1">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
-              <input type="password" class="form-control" placeholder="Repeat password">
+              <input type="password" class="form-control" placeholder="Repeat password" [(ngModel)]="repeatPass">
             </div>
 
             <div class="input-group mb-2">
               <span class="input-group-addon"><i class="fa fa-university"></i></span>
-              <input type="text" class="form-control" placeholder="Orgnization Code">
+              <input type="text" class="form-control" placeholder="Orgnization Code" [(ngModel)]="registerUser.orgCode">
             </div>
 
-            <button type="button" class="btn btn-block btn-success">Create Account</button>
+            <button type="button" class="btn btn-block btn-success" (click)="register()">Create Account</button>
             <div class="text-right mt-1">
               <span>已经有账号了? <a [routerLink]="['/login']">直接登录</a></span>
             </div>
