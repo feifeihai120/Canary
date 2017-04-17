@@ -145,7 +145,7 @@
                                         <div class="col-lg-12">
                                             <div class="card-block">
                                                 <!--多文件上传-->
-                                                <p-fileUpload name="files" multiple="multiple" url="{{finalFilesUrl}}" (onUpload)="upload($event)" (onBeforeSend)="addHeaders($event)">
+                                                <p-fileUpload name="files" multiple="multiple" accept=".pdf,.ppt,.doc,.docs,.xls,.xlsx" url="{{finalFilesUrl}}" (onUpload)="upload($event)" (onBeforeSend)="addHeaders($event)">
                                                     <!--单文件上传-->
                                                     <!--<p-fileUpload name="file" url="{{finalFileUrl}}" (onUpload)="upload($event)">-->
                                                     <template pTemplate="content">
