@@ -16,6 +16,8 @@ export class MeetingMaterial {
     statusDisplay: string
     downloadAuth: number
     downloadAuthDisplay: string
+    authorId: number
+    authorName: string
     createdAt: string
     updatedAt: string
 }

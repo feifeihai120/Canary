@@ -12,7 +12,7 @@ import { CalendarModule } from 'primeng/primeng'
 import { ChipsModule } from 'primeng/primeng';
 import { AccordionModule } from 'primeng/primeng'
 import { FileUploadModule } from 'primeng/primeng';
-import {PaginatorModule} from 'primeng/primeng';
+import { PaginatorModule } from 'primeng/primeng';
 
 // 功能 组件
 import { MeetingComponent } from './meeting.component';
@@ -23,6 +23,7 @@ import { MeetingRoutingModule } from './meeting-routing.module';
 
 import { MeetingService } from '../service/meeting.service'
 import { MeetingMaterialService } from '../service/meeting_material.service'
+import { MeetingPeopleService } from '../service/meeting_people.service'
 
 @NgModule({
   imports: [
@@ -44,6 +45,6 @@ import { MeetingMaterialService } from '../service/meeting_material.service'
     NewMeetingComponent,
     MeetingDetailComponent
   ],
-  providers: [MeetingService, MeetingMaterialService]
+  providers: [MeetingService, MeetingMaterialService, MeetingPeopleService]
 })
 export class MeetingModule { }

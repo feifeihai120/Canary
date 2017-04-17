@@ -1,0 +1,51 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 我上传的材料
+                </div>
+                <div class="card-block">
+                    <table class="table table-hover table-bordered table-striped table-condensed hidden-sm-down">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" name="checkAll"></th>
+                                <th>会议名称</th>
+                                <th>议题名称</th>
+                                <th>文件名</th>
+                                <th>页数</th>
+                                <th>大小</th>
+                                <th>状态</th>
+                                <th>上传时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let material of meetingMaterialPage.list">
+                                <td><input type="checkbox" name="check"></td>
+                                <td>{{material.meetingName}}</td>
+                                <td>{{material.topicName}}</td>
+                                <td>{{material.materialFullName}}</td>
+                                <td>{{material.pageNum}}</td>
+                                <td>{{material.materialSize}} &nbsp; &nbsp; {{material.unitDisplay}}</td>
+                                <td>{{material.statusDisplay}}</td>
+                                <td>{{material.createdAt}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" (click)="lookMaterial(material.id)">
+                                                                <i class="fa fa-star"></i>&nbsp; 查看</button>                                    &nbsp;
+                                    <button type="button" class="btn btn-success" (click)="downloadMaterial(material.id)">
+                                                                <i class="fa fa-download fa-lg"></i>&nbsp; 下载</button>                                    &nbsp;
+                                    <button type="button" class="btn btn-secondary" (click)="deleteMaterial(material.id)">
+                                                                <i class="fa fa-close fa-lg"></i>&nbsp; 删除</button>                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p-paginator rows="{{meetingMaterialPage.pageSize || 1}}" totalRecords="{{meetingMaterialPage.total || 0}}" (onPageChange)="paginate($event)"></p-paginator>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+</div>

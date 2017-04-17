@@ -34,7 +34,7 @@ export class MeetingService {
      * @param parmas 查询条件
      */
     getPageMeeting(pageNo: number, pageSize: number): Promise<MeetingPage> {
-        return this.httpService.get(BaseUrl.getBaseUrl() + 'meeting', `pageNo=${pageNo}&&pageSize=${pageSize}`)
+        return this.httpService.get(BaseUrl.getBaseUrl() + 'meeting', `pageNo=${pageNo}&pageSize=${pageSize}`)
             .toPromise()
             .then(meetingPage => meetingPage)
     }

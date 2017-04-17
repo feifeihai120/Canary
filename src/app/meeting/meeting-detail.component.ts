@@ -17,6 +17,7 @@ import { MeetingPeoplePage } from '../service/meeting_people_page'
 import { MeetingMaterialPage } from '../service/meeting_material_page'
 import { MeetingService } from '../service/meeting.service'
 import { MeetingMaterialService } from '../service/meeting_material.service'
+import { MeetingPeopleService } from '../service/meeting_people.service'
 
 import { BaseUrl } from '../service/url'
 
@@ -50,6 +51,7 @@ export class MeetingDetailComponent implements OnInit {
         private route: ActivatedRoute,
         private meetingService: MeetingService,
         private meetingMaterialService: MeetingMaterialService,
+        private meetingPeopleService: MeetingPeopleService,
         private location: Location) {
         this.meeting = new Meeting()
         this.newMeeting = new Meeting()
@@ -132,7 +134,7 @@ export class MeetingDetailComponent implements OnInit {
      * 刷新列表
      */
     refresh() {
-        this.meetingMaterialService.pageMaterial(this.currTopicId, this.currPageNo, this.currPageSize)
+        this.meetingMaterialService.pageTopicMaterial(this.currTopicId, this.currPageNo, this.currPageSize)
             .then(meetingDetarialPage => this.meetingMaterialPageInfo = meetingDetarialPage)
     }
 
@@ -163,10 +165,9 @@ export class MeetingDetailComponent implements OnInit {
      * @param event 换页事件
      */
     paginate(event) {
-        console.log(event)
         this.currPageNo = event.page + 1
         this.currPageSize = event.rows
-        this.meetingMaterialService.pageMaterial(this.currTopicId, event.page + 1, event.rows)
+        this.meetingMaterialService.pageTopicMaterial(this.currTopicId, event.page + 1, event.rows)
             .then(meetingDetarialPage => this.meetingMaterialPageInfo = meetingDetarialPage)
     }
 
@@ -179,6 +180,43 @@ export class MeetingDetailComponent implements OnInit {
                 console.log('delete success')
                 this.refresh()
             })
+    }
+
+    private peopleCurrPageNo = 1
+    private peopleCurrPageSize = 10
+    /**
+    * 请求换页
+    * @param event 换页事件
+    */
+    paginatePeople(event) {
+        this.peopleCurrPageNo = event.page + 1
+        this.peopleCurrPageSize = event.rows
+        this.meetingPeopleService.pageTopicMeetingPeople(this.currTopicId, event.page + 1, event.rows)
+            .then(page => this.meetingPeoplePageInfo = page)
+    }
+
+    /**
+     * 刷新与会人员 列表
+     */
+    refreshPeople() {
+        this.meetingPeopleService.pageTopicMeetingPeople(this.currTopicId, this.peopleCurrPageNo, this.peopleCurrPageSize)
+            .then(page => this.meetingPeoplePageInfo = page)
+    }
+
+    /**
+     * 设置为主持人
+     * @param userId 
+     */
+    setHost(userId: number) {
+
+    }
+
+    /**
+     * 移除此用户
+     * @param userId 
+     */
+    deletePeople(userId: number) {
+
     }
 
     copy(meeting: Meeting): Meeting {

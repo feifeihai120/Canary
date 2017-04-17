@@ -225,9 +225,9 @@
                                                             <td>{{people.groupName}}</td>
                                                             <td>{{people.roleDisplay}}</td>
                                                             <td>
-                                                                <button type="button" class="btn btn-primary" (click)="setHost(people.userId)">
+                                                                <button type="button" class="btn btn-primary" (click)="setHost(people.userId)" *ngIf="people.role !== 0" >
                                                                 <i class="fa fa-star"></i>&nbsp; 设为主讲</button>                                                                &nbsp;
-                                                                <button type="button" class="btn btn-secondary" (click)="deletePeople(people.userId)">
+                                                                <button type="button" class="btn btn-secondary" (click)="deletePeople(people.userId)" *ngIf="people.role !== 0" >
                                                                 <i class="fa fa-close fa-lg"></i>&nbsp; 移除</button>                                                                &nbsp;
                                                             </td>
                                                         </tr>

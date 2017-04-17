@@ -20,10 +20,32 @@ export class MeetingMaterialService {
      * @param meetingId 会议 ID
      * @param topicId 议题 ID
      */
-    pageMaterial(topicId: number, pageNo: number, pageSize: number): Promise<MeetingMaterialPage> {
-        return this.httpService.get(`${BaseUrl.getBaseUrl()}meetingMaterial/${topicId}`, `pageNo=${pageNo}&&pageSize=${pageSize}`)
+    pageTopicMaterial(topicId: number, pageNo: number, pageSize: number): Promise<MeetingMaterialPage> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}meetingMaterial/${topicId}`, `pageNo=${pageNo}&pageSize=${pageSize}`)
             .toPromise()
             .then(meetingMaterialPage => meetingMaterialPage)
+    }
+
+    /**
+     * 分页获取 会议材料
+     * @param meetingId 会议 ID
+     * @param topicId 议题 ID
+     */
+    pageMaterial(pageNo: number, pageSize: number): Promise<MeetingMaterialPage> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}meetingMaterial`, `pageNo=${pageNo}&pageSize=${pageSize}`)
+            .toPromise()
+            .then(meetingMaterialPage => meetingMaterialPage)
+    }
+
+    /**
+     * 获取用户上传的 材料列表
+     * @param pageNo 
+     * @param pageSize 
+     */
+    pageUserMaterial(pageNo: number, pageSize: number): Promise<MeetingMaterialPage> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}meetingMaterial/user`, `pageNo=${pageNo}&pageSize=${pageSize}`)
+            .toPromise()
+            .then(page => page)
     }
 
     /**
@@ -31,8 +53,8 @@ export class MeetingMaterialService {
      */
     deleteMaterial(materialId: number): Promise<boolean> {
         return this.httpService.delete(`${BaseUrl.getBaseUrl()}meetingMaterial/${materialId}`)
-        .toPromise()
-        .then(it => it)
+            .toPromise()
+            .then(it => it)
     }
 
 }
