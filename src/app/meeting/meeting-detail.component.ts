@@ -7,6 +7,9 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
+// primeng
+import { Message } from 'primeng/primeng'
+
 import { MeetingModel } from '../service/meeting_model'
 import { Meeting } from '../service/meeting'
 import { MeetingRoom } from '../service/meeting_room'
@@ -83,12 +86,14 @@ export class MeetingDetailComponent implements OnInit {
         this.edited = !this.edited
     }
 
+    private msgs: Message[] = [];
     /**
      * 保存编辑
      */
     update() {
         this.meetingService.update(this.newMeeting)
             .then(b => {
+                this.msgs.push({ severity: 'success', summary: '更新会议', detail: '恭喜！会议信息更新成功' })
                 this.edited = !this.edited
                 this.meeting = this.copy(this.newMeeting)
             })

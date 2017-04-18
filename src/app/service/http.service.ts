@@ -30,7 +30,7 @@ export class HttpService {
      * @param url 请求地址
      * @param parmas 查询参数  String | URLSearchParams
      */
-    get(url: string, parmas: any): Observable<any> {
+        get(url: string, parmas: any): Observable<any> {
         return this.http.get(url, { search: parmas, headers: this.headers, withCredentials: true })
             .map((res: Response) => res.json())
             .do(data => console.log('server data:', data))  // debug

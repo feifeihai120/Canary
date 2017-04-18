@@ -57,4 +57,11 @@ export class MeetingMaterialService {
             .then(it => it)
     }
 
+    /**
+     * 下载材料
+     * @param materialId 
+     */
+    download(materialId: number) {
+        this.httpService.get(`${BaseUrl.getBaseUrl()}file/files/${materialId}`, null)
+    }
 }

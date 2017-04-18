@@ -13,6 +13,7 @@ import { ChipsModule } from 'primeng/primeng';
 import { AccordionModule } from 'primeng/primeng'
 import { FileUploadModule } from 'primeng/primeng';
 import { PaginatorModule } from 'primeng/primeng';
+import { GrowlModule } from 'primeng/primeng';
 
 // 功能 组件
 import { MeetingComponent } from './meeting.component';
@@ -38,6 +39,7 @@ import { MeetingPeopleService } from '../service/meeting_people.service'
     AccordionModule,
     FileUploadModule,
     PaginatorModule,
+    GrowlModule,
     TabsModule
   ],
   declarations: [

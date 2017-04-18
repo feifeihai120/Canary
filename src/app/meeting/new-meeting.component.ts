@@ -45,7 +45,9 @@ export class NewMeetingComponent implements OnInit {
     submit() {
         console.log(this.meeting)
         this.meetingService.create(this.meeting)
-            .then(meetingId => this.router.navigate(['/meeting/meetingDetail', meetingId]))
+            .then(meetingId => {
+                this.router.navigate(['/meeting/meetingDetail', meetingId])
+            })
     }
 
     /**

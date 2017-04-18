@@ -41,7 +41,36 @@ export class UserService {
      */
     register(registerUser: RegisterUser): Promise<boolean> {
         return this.httpService.post(`${BaseUrl.getBaseUrl()}users/register`, registerUser)
-        .toPromise()
-        .then(it => it)
+            .toPromise()
+            .then(it => it)
+    }
+
+    /**
+     * 更新用户信息
+     * @param user 
+     */
+    update(user: User): Promise<boolean> {
+        return this.httpService.put(`${BaseUrl.getBaseUrl()}users`, user)
+            .toPromise()
+            .then(it => it)
+    }
+
+    /**
+     * 校验 密码
+     */
+    validate(pwd: string): Promise<boolean> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}users/validate`, `password=${pwd}`)
+            .toPromise()
+            .then(b => b)
+    }
+
+    /**
+     * 修改密码
+     * @param pwd 
+     */
+    changePwd(pwd: string): Promise<boolean> {
+        return this.httpService.post(`${BaseUrl.getBaseUrl()}users/changePwd`, { 'password': pwd })
+            .toPromise()
+            .then(b => b)
     }
 }

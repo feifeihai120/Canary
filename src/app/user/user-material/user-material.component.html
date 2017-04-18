@@ -33,8 +33,8 @@
                                 <td>
                                     <button type="button" class="btn btn-primary" (click)="lookMaterial(material.id)">
                                                                 <i class="fa fa-star"></i>&nbsp; 查看</button>                                    &nbsp;
-                                    <button type="button" class="btn btn-success" (click)="downloadMaterial(material.id)">
-                                                                <i class="fa fa-download fa-lg"></i>&nbsp; 下载</button>                                    &nbsp;
+                                    <a class="btn btn-success" href="{{material.materialLocation}}">
+                                        <i class="fa fa-download fa-lg"></i>&nbsp; 下载</a> &nbsp;
                                     <button type="button" class="btn btn-secondary" (click)="deleteMaterial(material.id)">
                                                                 <i class="fa fa-close fa-lg"></i>&nbsp; 删除</button>                                    &nbsp;
                                 </td>

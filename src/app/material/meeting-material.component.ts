@@ -22,11 +22,11 @@ export class MeetingMaterialComponent implements OnInit {
 
     }
 
-    lookMaterial() {
+    lookMaterial(materialId: number) {
 
     }
 
-    downloadMaterial() {
+    downloadMaterial(materialId: number) {
         
     }
 }

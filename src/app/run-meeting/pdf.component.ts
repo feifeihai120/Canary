@@ -7,8 +7,10 @@ import 'rxjs/add/operator/switchMap'
 // storage
 import { SessionStorage } from 'ng2-webstorage';
 
+// primeng
 import { Message } from 'primeng/primeng'
 
+// stomp websocket
 import { StompService } from 'ng2-stomp-service';
 
 import { User } from '../service/user'

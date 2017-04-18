@@ -28,7 +28,8 @@ export class UserMaterialComponent implements OnInit {
     }
 
     downloadMaterial(materialId: number) {
-
+        console.log(materialId)
+        this.meetingMaterialService.download(materialId)
     }
 
     deleteMaterial(materialId: number) {
