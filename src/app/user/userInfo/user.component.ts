@@ -54,6 +54,11 @@ export class UserComponent {
     cancelChangePwd() {
         this.showChangePwd = !this.showChangePwd
         this.showUserInfo = !this.showUserInfo
+        this.validatePass = false
+        this.notValidatePass = false
+        this.newPwd = ''
+        this.repeatPwd = ''
+        this.oldPwd = ''
     }
 
     private validatePass = false
@@ -72,6 +77,8 @@ export class UserComponent {
             .then(b => {
                 this.showChangePwd = !this.showChangePwd
                 this.showUserInfo = !this.showUserInfo
+                this.validatePass = false
+                this.notValidatePass = false
                 this.newPwd = ''
                 this.repeatPwd = ''
                 this.oldPwd = ''
