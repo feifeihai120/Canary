@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { PdfComponent } from './pdf.component'
+import { Routes, RouterModule } from '@angular/router';
+import { LookMaterialComponent } from './look-material.component';
 
 const routes: Routes = [
     {
         path: '',
         data: {
-            title: '会议室'
+            title: '查看材料'
         },
         children: [
             {
-                path: 'pdf/:id',
-                component: PdfComponent,
+                path: 'material/:id',
+                component: LookMaterialComponent,
                 data: {
-                    title: 'PDF文件'
+                    title: '查看材料'
                 }
             }
         ]
@@ -26,6 +26,6 @@ const routes: Routes = [
     ],
     exports: [RouterModule]
 })
-export class RunMeetingRoutingModule {
+export class LookMaterialRoutingModule {
 
 }

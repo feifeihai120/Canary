@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
 import 'rxjs/add/operator/toPromise'
 
 import { Meeting } from './meeting'
+import { MeetingMaterial } from './meeting_material'
 import { MeetingMaterialPage } from './meeting_material_page'
 
 
@@ -14,6 +15,16 @@ import { HttpService } from './http.service'
 export class MeetingMaterialService {
 
     constructor(private httpService: HttpService) { }
+
+    /**
+     * 查询 材料信息
+     * @param id 
+     */
+    getMaterial(id: number): Promise<MeetingMaterial> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}meetingMaterial/single/${id}`, null)
+            .toPromise()
+            .then(it => it)
+    }
 
     /**
      * 分页获取 会议材料
@@ -51,7 +62,7 @@ export class MeetingMaterialService {
     /**
      * 根据材料id 删除 材料
      */
-    deleteMaterial(materialId: number): Promise<boolean> {
+        deleteMaterial(materialId: number): Promise<boolean> {
         return this.httpService.delete(`${BaseUrl.getBaseUrl()}meetingMaterial/${materialId}`)
             .toPromise()
             .then(it => it)

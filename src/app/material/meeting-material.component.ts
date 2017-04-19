@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 import { MeetingMaterialPage } from '../service/meeting_material_page'
 import { MeetingMaterialService } from '../service/meeting_material.service'
@@ -11,7 +12,8 @@ import { MeetingMaterialService } from '../service/meeting_material.service'
 export class MeetingMaterialComponent implements OnInit {
 
     private meetingMaterialPage: MeetingMaterialPage = new MeetingMaterialPage()
-    constructor(private meetingMaterialService: MeetingMaterialService) { }
+    constructor(private meetingMaterialService: MeetingMaterialService,
+        private router: Router) { }
 
     ngOnInit() {
         this.meetingMaterialService.pageMaterial(1, 10)
@@ -23,10 +25,11 @@ export class MeetingMaterialComponent implements OnInit {
     }
 
     lookMaterial(materialId: number) {
-
+        console.log(materialId)
+        this.router.navigate(['/lookMaterial/material', materialId])
     }
 
     downloadMaterial(materialId: number) {
-        
+
     }
 }

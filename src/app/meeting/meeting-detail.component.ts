@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router'
+import { ActivatedRoute, Params, Router } from '@angular/router'
 import { Location } from '@angular/common'
 
 import 'rxjs/add/operator/switchMap'
@@ -63,6 +63,7 @@ export class MeetingDetailComponent implements OnInit {
         private meetingMaterialService: MeetingMaterialService,
         private meetingPeopleService: MeetingPeopleService,
         private location: Location,
+        private router: Router,
         private userService: UserService) {
         this.meeting = new Meeting()
         this.newMeeting = new Meeting()
@@ -182,6 +183,15 @@ export class MeetingDetailComponent implements OnInit {
         this.currPageSize = event.rows
         this.meetingMaterialService.pageTopicMaterial(this.currTopicId, event.page + 1, event.rows)
             .then(meetingDetarialPage => this.meetingMaterialPageInfo = meetingDetarialPage)
+    }
+
+    /**
+     * 查看 材料
+     * @param materialId 
+     */
+    lookMaterial(materialId: number) {
+        console.log(materialId)
+        this.router.navigate(['/lookMaterial/material', materialId])
     }
 
     /**

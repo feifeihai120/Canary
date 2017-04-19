@@ -1,0 +1,22 @@
+<header class="app-header navbar">
+    <div class="m-auto">
+        <strong>{{meetingMaterial.materialFullName}}</strong>
+    </div>
+    <ul class="nav navbar-nav mr-1">
+        <button type="button" class="btn btn-success btn-sm" (click)="leave()"><i class="fa fa-close fa-lg"></i>&nbsp; 退出查看</button>
+    </ul>
+</header>
+
+<div class="app-body">
+    <p-growl [value]="msgs"></p-growl>
+    <div class="container-fluid">
+        <!--<router-outlet></router-outlet>-->
+        <div class="animated fadeIn">
+            <div class="card pdf-bg mt-1">
+                <pdf-viewer #myPdfViewer [src]="meetingMaterial.materialLocation" [page]="page" [original-size]="true" (click)="next($event)" [render-text]="false"
+                    [zoom]="zoom" (after-load-complete)="afterLoadComplete($event)" class="m-auto"></pdf-viewer>
+            </div>
+        </div>
+    </div>
+    <!-- /.conainer-fluid -->
+</div>

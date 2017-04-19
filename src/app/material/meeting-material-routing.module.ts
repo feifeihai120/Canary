@@ -5,10 +5,18 @@ import { MeetingMaterialComponent } from './meeting-material.component';
 const routes: Routes = [
     {
         path: '',
-        component: MeetingMaterialComponent,
         data: {
             title: '会议材料'
-        }
+        },
+        children: [
+            {
+                path: 'meetingMaterialList',
+                component: MeetingMaterialComponent,
+                data: {
+                    title: '会议材料列表'
+                }
+            }
+        ]
     }
 ]
 

@@ -31,6 +31,7 @@ import { AppRoutingModule } from './app.routing';
 import { FullLayoutComponent } from './layouts/full-layout.component';
 import { SimpleLayoutComponent } from './layouts/simple-layout.component'
 import { RunMeetingLayoutComponent } from './layouts/run-meeting-layout.component'
+import { LookMeetingLayoutComponent } from './layouts/look-material-layout.component'
 
 // 自定义 组件
 import { AppComponent } from './app.component';
@@ -59,6 +60,7 @@ import { HttpService } from './service/http.service'
     FullLayoutComponent,
     SimpleLayoutComponent,
     RunMeetingLayoutComponent,
+    LookMeetingLayoutComponent,
     NAV_DROPDOWN_DIRECTIVES,
     BreadcrumbsComponent,
     SIDEBAR_TOGGLE_DIRECTIVES,

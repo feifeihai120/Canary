@@ -3,10 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 // 自定义组件
 import { FullLayoutComponent } from './layouts/full-layout.component';
-import { SimpleLayoutComponent} from './layouts/simple-layout.component'
+import { SimpleLayoutComponent } from './layouts/simple-layout.component'
 import { RunMeetingLayoutComponent } from './layouts/run-meeting-layout.component'
 import { RegisterComponent } from './pages/register.component'
 import { LoginComponent } from './pages/login.component'
+import { LookMeetingLayoutComponent } from './layouts/look-material-layout.component'
 
 export const routes: Routes = [
   {
@@ -57,6 +58,19 @@ export const routes: Routes = [
   },
   {
     path: '',
+    component: LookMeetingLayoutComponent,
+    data: {
+      title: '查看材料'
+    },
+    children: [
+      {
+        path: 'lookMaterial',
+        loadChildren: './look-material/look-material.module#LookMaterialModule'
+      }
+    ]
+  },
+  {
+    path: '',
     component: RunMeetingLayoutComponent,
     data: {
       title: '会议室'
@@ -71,7 +85,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

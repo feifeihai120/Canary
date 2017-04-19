@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 import { MeetingMaterialService } from '../../service/meeting_material.service'
 import { MeetingMaterialPage } from '../../service/meeting_material_page'
@@ -12,7 +13,9 @@ import { MeetingMaterialPage } from '../../service/meeting_material_page'
 export class UserMaterialComponent implements OnInit {
 
     private meetingMaterialPage: MeetingMaterialPage = new MeetingMaterialPage()
-    constructor(private meetingMaterialService: MeetingMaterialService) { }
+    constructor(
+        private meetingMaterialService: MeetingMaterialService,
+        private router: Router) { }
 
     ngOnInit() {
         this.meetingMaterialService.pageUserMaterial(1, 10)
@@ -20,11 +23,13 @@ export class UserMaterialComponent implements OnInit {
     }
 
     paginate(event) {
-
+        this.meetingMaterialService.pageUserMaterial(event.page + 1, event.rows)
+            .then(page => this.meetingMaterialPage = page)
     }
 
     lookMaterial(materialId: number) {
-
+        console.log(materialId)
+        this.router.navigate(['/lookMaterial/material', materialId])
     }
 
     downloadMaterial(materialId: number) {
@@ -33,6 +38,9 @@ export class UserMaterialComponent implements OnInit {
     }
 
     deleteMaterial(materialId: number) {
-
+        this.meetingMaterialService.deleteMaterial(materialId)
+            .then(b => {
+                console.log('delete success')
+            })
     }
 }

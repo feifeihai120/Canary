@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 import { MeetingPeopleService } from '../../service/meeting_people.service'
 import { MeetingPeoplePage } from '../../service/meeting_people_page'
@@ -10,7 +11,9 @@ import { MeetingPeoplePage } from '../../service/meeting_people_page'
 })
 export class UserMeetingComponent implements OnInit {
     private userMeetingPage: MeetingPeoplePage = new MeetingPeoplePage()
-    constructor(private userMeetingService: MeetingPeopleService) { }
+    constructor(
+        private userMeetingService: MeetingPeopleService,
+        private router: Router) { }
 
     ngOnInit() {
         this.userMeetingService.pageUserMeeting(1, 10)
@@ -23,6 +26,6 @@ export class UserMeetingComponent implements OnInit {
     }
 
     lookMeeting(meetingId: number) {
-
+        this.router.navigate(['/meeting/meetingDetail', meetingId])
     }
 }
