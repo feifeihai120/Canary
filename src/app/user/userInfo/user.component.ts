@@ -79,6 +79,8 @@ export class UserComponent {
                 this.showUserInfo = !this.showUserInfo
                 this.validatePass = false
                 this.notValidatePass = false
+                this.validateNotRepeat = false
+                this.validateRepeat = false
                 this.newPwd = ''
                 this.repeatPwd = ''
                 this.oldPwd = ''
@@ -86,8 +88,10 @@ export class UserComponent {
             })
     }
 
-    private validateRepeat = true
+    private validateRepeat = false
+    private validateNotRepeat = false
     repeat() {
+        this.validateNotRepeat = !this.newPwd === this.repeatPwd
         this.validateRepeat = this.newPwd === this.repeatPwd
     }
 

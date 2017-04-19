@@ -41,7 +41,7 @@ export class PdfComponent implements OnInit {
     @SessionStorage() private currUser: User
     private meetingSimpleModel: MeetingSimpleModel = new MeetingSimpleModel()
 
-    private pdfSrc: string = 'http://localhost:9009/api/file/files/pdf-test.pdf'
+    private pdfSrc: string = 'http://localhost:9009/api/file/files/HDKQHrP8qZvMb315uZk3_1492570601915.pdf'
     private page: number = 1
     private scale: number = 1.0
     private zoom: number = 1.0;

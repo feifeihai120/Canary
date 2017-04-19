@@ -1,4 +1,20 @@
 <p-growl [value]="msgs"></p-growl>
+<p-dialog header="添加用户到会议" [(visible)]="showAddPeopleDialog" responsive="true" width="900">
+    <p-pickList [source]="sourcePeople" [target]="targetPeople" responsive="true">
+        <template let-user pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <img src="{{user.avatar}}" class="avatar rounded-circle" />
+                <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{user.username}} - {{user.orgName}} - {{user.groupName}}</div>
+            </div>
+        </template>
+    </p-pickList>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="cancelAdd()" label="取消添加"></button>
+            <button type="button" pButton icon="fa-check" (click)="submitAdd()" label="确认添加"></button>
+        </div>
+    </p-footer>
+</p-dialog>
 <div class="animated fadeIn">
     <div class="row">
         <div class="col-md-12 mb-2">
@@ -146,8 +162,7 @@
                                         <div class="col-lg-12">
                                             <div class="card-block">
                                                 <!--多文件上传-->
-                                                <p-fileUpload name="files" multiple="multiple" accept=".pdf" url="{{finalFilesUrl}}" (onUpload)="upload($event)"
-                                                    (onBeforeSend)="addHeaders($event)">
+                                                <p-fileUpload name="files" multiple="multiple" accept=".pdf" url="{{finalFilesUrl}}" (onUpload)="upload($event)" (onBeforeSend)="addHeaders($event)">
                                                     <!--单文件上传-->
                                                     <!--<p-fileUpload name="file" url="{{finalFileUrl}}" (onUpload)="upload($event)">-->
                                                     <template pTemplate="content">
@@ -206,6 +221,7 @@
                                         <button type="button" class="btn btn-primary" (click)="addPeople()"><i class="fa fa-star"></i>&nbsp; 增加</button>&nbsp;
                                         &nbsp;
                                         <button type="button" class="btn btn-success" (click)="refreshPeople()"><i class="fa fa-magic"></i>&nbsp; 刷新</button>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12">

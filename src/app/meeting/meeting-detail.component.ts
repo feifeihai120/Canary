@@ -10,6 +10,11 @@ import 'rxjs/add/operator/catch';
 // primeng
 import { Message } from 'primeng/primeng'
 
+// storage
+import { SessionStorage } from 'ng2-webstorage';
+
+import { User } from '../service/user'
+import { MeetingPeople } from '../service/meeting_people'
 import { MeetingModel } from '../service/meeting_model'
 import { Meeting } from '../service/meeting'
 import { MeetingRoom } from '../service/meeting_room'
@@ -21,6 +26,7 @@ import { MeetingMaterialPage } from '../service/meeting_material_page'
 import { MeetingService } from '../service/meeting.service'
 import { MeetingMaterialService } from '../service/meeting_material.service'
 import { MeetingPeopleService } from '../service/meeting_people.service'
+import { UserService } from '../service/user.service'
 
 import { BaseUrl } from '../service/url'
 
@@ -31,6 +37,7 @@ import { BaseUrl } from '../service/url'
 })
 export class MeetingDetailComponent implements OnInit {
 
+    @SessionStorage() private currUser: User
     private meetingModel: MeetingModel
     private meeting: Meeting
     private newMeeting: Meeting
@@ -55,7 +62,8 @@ export class MeetingDetailComponent implements OnInit {
         private meetingService: MeetingService,
         private meetingMaterialService: MeetingMaterialService,
         private meetingPeopleService: MeetingPeopleService,
-        private location: Location) {
+        private location: Location,
+        private userService: UserService) {
         this.meeting = new Meeting()
         this.newMeeting = new Meeting()
     }
@@ -198,6 +206,48 @@ export class MeetingDetailComponent implements OnInit {
         this.peopleCurrPageSize = event.rows
         this.meetingPeopleService.pageTopicMeetingPeople(this.currTopicId, event.page + 1, event.rows)
             .then(page => this.meetingPeoplePageInfo = page)
+    }
+
+    private showAddPeopleDialog = false
+    private sourcePeople: User[] = [] // 可以选择的用户列表 ： 不包含已经选择过的用户，根据 会议所属 group 查询
+    private targetPeople: User[] = []
+    /**
+     * 显示 添加用户的 对话框
+     */
+    addPeople() {
+        // 查询 可以选择的用户列表
+        this.userService.currGroupPeople()
+            .then(list => {
+                this.sourcePeople = list
+                this.showAddPeopleDialog = !this.showAddPeopleDialog
+            })
+    }
+
+    submitAdd() {
+        let addedPeople: MeetingPeople[] = []
+        this.targetPeople.forEach(it => {
+            let mp = new MeetingPeople()
+            mp.userId = it.id
+            mp.topicId = this.currTopicId
+            mp.meetingId = this.currMeetingId
+            addedPeople.push(mp)
+        })
+        this.meetingPeopleService.addPeople(addedPeople)
+            .then(b => {
+                this.showAddPeopleDialog = false
+                this.targetPeople = []
+                this.refreshPeople()
+            })
+            .catch(error => {
+                console.log('meeting-daterial..')
+                console.log(error)
+                this.msgs.push({ severity: 'warn', summary: '更新参会人员列表失败', detail: '抱歉！' + error.message })
+            })
+    }
+
+    cancelAdd() {
+        this.showAddPeopleDialog = false
+        this.targetPeople = []
     }
 
     /**

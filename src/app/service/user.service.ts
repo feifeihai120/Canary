@@ -73,4 +73,16 @@ export class UserService {
             .toPromise()
             .then(b => b)
     }
+
+
+
+    /**
+     * 根据组ID 查询 用户
+     * @param groupId 
+     */
+    currGroupPeople(): Promise<User[]> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}users/group`, null)
+            .toPromise()
+            .then(list => list)
+    }
 }

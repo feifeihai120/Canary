@@ -72,7 +72,7 @@
 								<div class="alert alert-danger alert-dismissible" role="alert" *ngIf="notValidatePass">
 									<strong>糟糕！</strong>密码验证❌
 								</div>
-								<div class="alert alert-danger alert-dismissible" role="alert" *ngIf="validatePass">
+								<div class="alert alert-success alert-dismissible" role="alert" *ngIf="validatePass">
 									<strong>恭喜！</strong>密码验证✅
 								</div>
 								<input type="password" class="form-control" id="oldPwd" [(ngModel)]="oldPwd" (blur)="validate()">
@@ -92,8 +92,11 @@
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label for="repeatPwd">重新出入新密码</label>
-								<div class="alert alert-danger alert-dismissible" role="alert" *ngIf="!validateRepeat">
+								<div class="alert alert-danger alert-dismissible" role="alert" *ngIf="validateNotRepeat">
 									<strong>糟糕！</strong>两次输入的密码不一致，请重新输入
+								</div>
+								<div class="alert alert-success alert-dismissible" role="alert" *ngIf="validateRepeat">
+									<strong>恭喜！</strong>两次输入的密码一致
 								</div>
 								<input type="password" class="form-control" id="repeatPwd" [(ngModel)]="repeatPwd" (blur)="repeat()" *ngIf="validatePass" >
 								<input type="password" class="form-control" id="repeatPwd" [(ngModel)]="repeatPwd" (blur)="repeat()" *ngIf="!validatePass" disabled>
@@ -104,7 +107,8 @@
 				<div class="card-footer">
 					<button (click)="cancelChangePwd()" class="btn btn-secondary float-right"><i class="fa fa-close fa-lg"></i>&nbsp; 取消修改</button>
 					<div class="float-right">&nbsp;&nbsp;</div>
-					<button (click)="saveChangePwd()" class="btn btn-primary float-right"><i class="fa fa-check-square-o fa-lg"></i>&nbsp; 确认修改</button>
+					<button (click)="saveChangePwd()" class="btn btn-primary float-right" *ngIf="!validatePass || !validateRepeat" disabled><i class="fa fa-check-square-o fa-lg"></i>&nbsp; 确认修改</button>
+					<button (click)="saveChangePwd()" class="btn btn-primary float-right" *ngIf="validatePass && validateRepeat" ><i class="fa fa-check-square-o fa-lg"></i>&nbsp; 确认修改</button>
 				</div>
 			</div>
 		</div>

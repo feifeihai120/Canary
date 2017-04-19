@@ -30,7 +30,7 @@ export class HttpService {
      * @param url 请求地址
      * @param parmas 查询参数  String | URLSearchParams
      */
-        get(url: string, parmas: any): Observable<any> {
+    get(url: string, parmas: any): Observable<any> {
         return this.http.get(url, { search: parmas, headers: this.headers, withCredentials: true })
             .map((res: Response) => res.json())
             .do(data => console.log('server data:', data))  // debug
@@ -73,9 +73,11 @@ export class HttpService {
     }
 
     private handleError(error: any) {
+        error = error.json()
+        console.log(error)
         let errMsg = (error.message) ? error.message :
             error.status ? `error.status - error.statusText` : 'Server error';
         console.error(errMsg); // log to console instead
-        return Observable.throw(errMsg);
+        return Observable.throw(error);
     }
 }
