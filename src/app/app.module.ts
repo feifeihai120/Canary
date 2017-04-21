@@ -7,8 +7,6 @@ import { HttpModule } from '@angular/http'
 
 // storage
 import { Ng2Webstorage } from 'ng2-webstorage';
-// cookie
-import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 // ng2-bootstrap
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
@@ -73,7 +71,6 @@ import { HttpService } from './service/http.service'
     useClass: HashLocationStrategy
   },
     UserService,
-    CookieService,
     HttpService],
   bootstrap: [AppComponent]
 })

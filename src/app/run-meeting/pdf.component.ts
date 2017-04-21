@@ -16,6 +16,8 @@ import { StompService } from 'ng2-stomp-service';
 import { User } from '../service/user'
 import { MeetingService } from '../service/meeting.service'
 import { MeetingSimpleModel } from '../service/meeting_simple_model'
+import { MeetingMaterial } from '../service/meeting_material'
+import { MeetingTopic } from '../service/meeting_topic'
 import { PageNotice } from '../service/page_notice'
 
 @Component({
@@ -40,8 +42,9 @@ export class PdfComponent implements OnInit {
 
     @SessionStorage() private currUser: User
     private meetingSimpleModel: MeetingSimpleModel = new MeetingSimpleModel()
-
-    private pdfSrc: string = 'http://localhost:9009/api/file/files/HDKQHrP8qZvMb315uZk3_1492570601915.pdf'
+    private currMaterial = new MeetingMaterial()
+    private currTopic = new MeetingTopic()
+    // private pdfSrc: string = 'http://localhost:9009/api/file/files/AeQfSQ7jIqXvxfhT29IE_1492585664680.pdf'
     private page: number = 1
     private scale: number = 1.0
     private zoom: number = 1.0;
@@ -62,13 +65,16 @@ export class PdfComponent implements OnInit {
         private route: ActivatedRoute,
         private meetingService: MeetingService,
         private router: Router,
-        private stomp: StompService) { }
+        private stomp: StompService, ) { }
 
     ngOnInit() {
         this.route.params
             .switchMap((parmas: Params) => this.meetingService.getMeetingSimpleModel(+parmas['id']))
             .subscribe(meetingSimpleModel => {
                 this.meetingSimpleModel = meetingSimpleModel
+                this.currMaterial = this.meetingSimpleModel.meetingMaterials[0]
+                this.currTopic.id = this.meetingSimpleModel.topicId
+                this.currTopic.name = this.meetingSimpleModel.topicName
                 console.log(this.meetingSimpleModel)
 
                 this.stomp.configure(this.wsConf);
@@ -76,43 +82,51 @@ export class PdfComponent implements OnInit {
                     console.log('connected');
                     // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
                     this.subMaterialAsync = this.stomp.subscribe(
-                        `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}/${this.currMaterialId}`,
+                        `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}/${this.currMaterial.id}`,
                         this.nextPageResponse
                     )
                     // 订阅当前 会议的 参会人员列表 /meeting/meeting.participants/meetingId/topicId
                     this.subMeetingParticipants = this.stomp.subscribe(
-                        `/meeting/meeting.participants/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        `/meeting/meeting.participants/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
                         this.participantResponse
                     )
                     // 订阅 参会人员 加入会议 /meeting/enter/meetingId/topicId
                     this.subMeetingPeopleEnter = this.stomp.subscribe(
-                        `/meeting/join/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        `/meeting/join/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
                         this.joinResponse
                     )
                     // 订阅 参会人员 中途离会 /meeting/leave/meetingId/topicId
                     this.subMeetingPeopleLeave = this.stomp.subscribe(
-                        `/meeting/leave/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}`,
+                        `/meeting/leave/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
                         this.leaveResponse
+                    )
+                    // 订阅 材料切换 通知  /meeting/meeting.material/meetingId/topicId
+                    this.subChangeMaterial = this.stomp.subscribe(
+                        `/meeting/meeting.material/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+                        this.changeMaterialResponse
+                    )
+                    // 订阅 议题切换 通知 /meeting/meeting.topic/meetingId/topicId
+                    this.subChangeTopic = this.stomp.subscribe(
+                        `/meeting/meeting.topic/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+                        this.changeTopicResponse
                     )
                     // 请求 参会人员 到场 列表
                     this.stomp.send('/app/meeting.participants',
                         JSON.stringify(
                             {
                                 'meetingId': this.meetingSimpleModel.meeting.id,
-                                'topicId': this.meetingSimpleModel.topicId,
-                                'userId': this.currUser.id
+                                'topicId': this.currTopic.id,
+                                'userId': this.currUser.id,
                             }
                         ))
                 });
             })
     }
 
-    private pageNotice: PageNotice
     // 处理 换页通知
     public nextPageResponse = (page) => {
         if (this.async) {
-            this.pageNotice = page
-            this.page = this.pageNotice.page
+            this.page = page.page
         }
     }
 
@@ -135,6 +149,68 @@ export class PdfComponent implements OnInit {
         this.onlines = this.onlines.filter(id => id !== leave.userId)
     }
 
+    // 处理 主持人 切换材料 通知
+    public changeMaterialResponse = (changeMaterial) => {
+        if (this.currUser.id !== this.meetingSimpleModel.meeting.managerId) {
+            console.log(changeMaterial)
+            this.currMaterial = this.meetingSimpleModel.meetingMaterials.find(it => it.id === changeMaterial.materialId)
+            this.page = 1
+            // 参会人员 要切换 订阅 频道 到 当前 材料的 通知频道
+            // 关闭当前同步材料订阅并打开新的材料订阅
+            this.subMaterialAsync.unsubscribe()
+            // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
+            this.subMaterialAsync = this.stomp.subscribe(
+                `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}/${this.currMaterial.id}`,
+                this.nextPageResponse
+            )
+        }
+    }
+
+    // 处理 主持人 切换议题 通知
+    public changeTopicResponse = (changeTopic) => {
+        if (this.currUser.id !== this.meetingSimpleModel.meeting.managerId) {
+            console.log(changeTopic)
+            // 切换：发送切换议题的请求 --> 关闭当前同步订阅并打开新的订阅
+            // 切换 议题
+            this.currTopic = this.meetingSimpleModel.topics.find(it => it.id === changeTopic.topicId)
+            this.meetingSimpleModel.topicId = this.currTopic.id
+            this.meetingSimpleModel.topicName = this.currTopic.name
+            this.currMaterial = this.meetingSimpleModel.meetingMaterials[0]
+            this.page = 1
+            // 初始化 新议题 的相关信息：参会人员列表、议题材料列表
+            this.meetingService.getMeetingTopicSimpleModel(this.currTopic.id)
+                .then(model => {
+                    this.meetingSimpleModel.users = model.users
+                    this.meetingSimpleModel.meetingMaterials = model.meetingMaterials
+                    this.currMaterial = this.meetingSimpleModel.meetingMaterials[0]
+                    this.page = 1
+                    // 关闭 当前 的订阅频道
+                    this.subMaterialAsync.unsubscribe()
+                    // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
+                    this.subMaterialAsync = this.stomp.subscribe(
+                        `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}/${this.currMaterial.id}`,
+                        this.nextPageResponse
+                    )
+                })
+            // 用户进入 议题
+            // 然后重新 初始化 新议题下的 通知订阅
+            this.meetingService.enterTopic(this.meetingSimpleModel.meeting.id, this.currTopic.id)
+                .then(b => {
+                    this.reInitSubEvent()
+                    // 请求 参会人员 到场 列表
+                    this.stomp.send('/app/meeting.participants',
+                        JSON.stringify(
+                            {
+                                'meetingId': this.meetingSimpleModel.meeting.id,
+                                'topicId': this.currTopic.id,
+                                'userId': this.currUser.id,
+                            }
+                        ))
+
+                })
+        }
+    }
+
     public isOnline(userId: number): boolean {
         return this.onlines.includes(userId)
     }
@@ -155,7 +231,6 @@ export class PdfComponent implements OnInit {
     // 是否开启 材料同步
     private async: boolean = true
 
-    private currMaterialId: number = 1
     /**
      * 根据鼠标点击事件 翻页
      */
@@ -174,13 +249,13 @@ export class PdfComponent implements OnInit {
             this.msgs.push({ severity: 'warn', summary: '', detail: '已经到最后一页了' })
         } else {
             this.page += 1
-
+            // 发送换页 通知
             this.stomp.send('/app/meeting.change-page',
                 JSON.stringify(
                     {
                         'meetingId': this.meetingSimpleModel.meeting.id,
-                        'topicId': 1,
-                        'materialId': 1,
+                        'topicId': this.currTopic.id,
+                        'materialId': this.currMaterial.id,
                         'page': this.page
                     }
                 ));
@@ -192,13 +267,13 @@ export class PdfComponent implements OnInit {
             this.msgs.push({ severity: 'warn', summary: '', detail: '已经到第一页了' })
         } else {
             this.page -= 1
-
+            // 发送换页 通知
             this.stomp.send('/app/meeting.change-page',
                 JSON.stringify(
                     {
                         'meetingId': this.meetingSimpleModel.meeting.id,
-                        'topicId': 1,
-                        'materialId': 1,
+                        'topicId': this.currTopic.id,
+                        'materialId': this.currMaterial.id,
                         'page': this.page
                     }
                 ));
@@ -245,17 +320,116 @@ export class PdfComponent implements OnInit {
     /**
      * 切换材料
      */
-    changeMaterial() {
-        // 关闭当前同步材料订阅并打开新的材料订阅
+    changeMaterial(materialId: number) {
+        if (this.currMaterial.id !== materialId) {
+            // 切换 材料
+            this.currMaterial = this.meetingSimpleModel.meetingMaterials.find(it => it.id === materialId)
+            // 关闭当前同步材料订阅并打开新的材料订阅
+            this.subMaterialAsync.unsubscribe()
+            // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
+            this.subMaterialAsync = this.stomp.subscribe(
+                `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.meetingSimpleModel.topicId}/${this.currMaterial.id}`,
+                this.nextPageResponse
+            )
+            // 发送 切换材料 通知
+            this.stomp.send(
+                `/app/meeting.change-material`,
+                JSON.stringify({
+                    'meetingId': this.meetingSimpleModel.meeting.id,
+                    'topicId': this.currTopic.id,
+                    'materialId': this.currMaterial.id
+                })
+            )
+            this.page = 1
+        }
     }
 
     /**
      * 切换议题， 议题切换后，当前议题的状态即置为 已结束
      */
-    changeTopic() {
-        // 1. 提示是否切换
+    changeTopic(topicId: number) {
+        let lastTopicId = this.currTopic.id
+        if (this.currTopic.id !== topicId) {
+            // 1. 提示是否切换
 
-        // 2. 切换：发送切换议题的请求 --> 关闭当前同步订阅并打开新的订阅
+            // 2. 切换：发送切换议题的请求 --> 关闭当前同步订阅并打开新的订阅
+            // 切换 议题
+            this.currTopic = this.meetingSimpleModel.topics.find(it => it.id === topicId)
+            this.meetingSimpleModel.topicId = this.currTopic.id
+            this.meetingSimpleModel.topicName = this.currTopic.name
+            // 初始化 新议题的 信息：参会人员列表、议题材料列表
+            this.meetingService.getMeetingTopicSimpleModel(this.currTopic.id)
+                .then(model => {
+                    this.meetingSimpleModel.users = model.users
+                    this.meetingSimpleModel.meetingMaterials = model.meetingMaterials
+                    this.currMaterial = this.meetingSimpleModel.meetingMaterials[0]
+                    this.page = 1
+                    // 关闭 当前 的订阅频道
+                    this.subMaterialAsync.unsubscribe()
+                    // 订阅当前 议题 的 材料同步 /meeting/next-page/meetingId/topicId/materialId
+                    this.subMaterialAsync = this.stomp.subscribe(
+                        `/meeting/next-page/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}/${this.currMaterial.id}`,
+                        this.nextPageResponse
+                    )
+                    // 发送 切换 议题的 通知
+                    this.stomp.send(
+                        `/app/meeting.change-topic`,
+                        JSON.stringify({
+                            'meetingId': this.meetingSimpleModel.meeting.id,
+                            'lastTopicId': lastTopicId,
+                            'topicId': this.currTopic.id,
+                            'userId': this.currUser.id
+                        })
+                    )
+                })
+            // 主持人 进入 议题
+            this.meetingService.enterTopic(this.meetingSimpleModel.meeting.id, this.currTopic.id)
+                .then(b => {
+                    this.reInitSubEvent()
+                    // 请求 参会人员 到场 列表
+                    this.stomp.send('/app/meeting.participants',
+                        JSON.stringify(
+                            {
+                                'meetingId': this.meetingSimpleModel.meeting.id,
+                                'topicId': this.currTopic.id,
+                                'userId': this.currUser.id,
+                            }
+                        ))
+                })
+        }
+    }
+
+    private reInitSubEvent() {
+        this.subMeetingParticipants.unsubscribe()
+        // 订阅当前 会议的 参会人员列表 /meeting/meeting.participants/meetingId/topicId
+        this.subMeetingParticipants = this.stomp.subscribe(
+            `/meeting/meeting.participants/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+            this.participantResponse
+        )
+        this.subMeetingPeopleEnter.unsubscribe()
+        // 订阅 参会人员 加入会议 /meeting/enter/meetingId/topicId
+        this.subMeetingPeopleEnter = this.stomp.subscribe(
+            `/meeting/join/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+            this.joinResponse
+        )
+        this.subMeetingPeopleLeave.unsubscribe()
+        // 订阅 参会人员 中途离会 /meeting/leave/meetingId/topicId
+        this.subMeetingPeopleLeave = this.stomp.subscribe(
+            `/meeting/leave/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+            this.leaveResponse
+        )
+        this.subChangeMaterial.unsubscribe()
+        // 订阅 材料切换 通知  /meeting/meeting.material/meetingId/topicId
+        this.subChangeMaterial = this.stomp.subscribe(
+            `/meeting/meeting.material/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+            this.changeMaterialResponse
+        )
+        this.subChangeTopic.unsubscribe()
+        // 订阅 议题切换 通知 /meeting/meeting.topic/meetingId/topicId
+        this.subChangeTopic = this.stomp.subscribe(
+            `/meeting/meeting.topic/${this.meetingSimpleModel.meeting.id}/${this.currTopic.id}`,
+            this.changeTopicResponse
+        )
     }
 
     private unSubscribe() {
@@ -263,6 +437,8 @@ export class PdfComponent implements OnInit {
         this.subMeetingParticipants.unsubscribe()
         this.subMeetingPeopleEnter.unsubscribe()
         this.subMeetingPeopleLeave.unsubscribe()
+        this.subChangeMaterial.unsubscribe()
+        this.subChangeTopic.unsubscribe()
         this.stomp.disconnect().then(() => {
             console.log('Connection closed')
             this.router.navigateByUrl('/meeting/meetingList')

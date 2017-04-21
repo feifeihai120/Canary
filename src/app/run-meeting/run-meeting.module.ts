@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 
+// cookie
+import { CookieService } from 'angular2-cookie/services/cookies.service';
+
 // ng2-bootstrap
 import { DropdownModule } from 'ng2-bootstrap/dropdown';
 import { TabsModule } from 'ng2-bootstrap/tabs';
@@ -36,6 +39,6 @@ import { MeetingService } from '../service/meeting.service'
         GrowlModule
     ],
     declarations: [PdfComponent, AsideToggleDirective, PdfViewerComponent],
-    providers: [MeetingService, StompService],
+    providers: [MeetingService, StompService, CookieService],
 })
 export class RunMeetingModule { }

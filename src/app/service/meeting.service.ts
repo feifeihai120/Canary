@@ -87,6 +87,27 @@ export class MeetingService {
     }
 
     /**
+     * 根据 议题Id 获取 参会人员列表和 议题材料列表
+     * @param topicId 
+     */
+    getMeetingTopicSimpleModel(topicId: number): Promise<MeetingSimpleModel> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}run-meeting/simple/${topicId}`, null)
+            .toPromise()
+            .then(model => model)
+    }
+
+    /**
+     * 主持人切换 议题时 ，参会人员接收到 通知后，通过此方法 向后台 发送一个 进入 议题的请求，以便记录 当前议题的参会人员 列表
+     * @param meetingId 
+     * @param topicId 
+     */
+    enterTopic(meetingId: number, topicId: number): Promise<boolean> {
+        return this.httpService.get(`${BaseUrl.getBaseUrl()}run-meeting/enterTopic/${meetingId}/${topicId}`, null)
+            .toPromise()
+            .then(it => it)
+    }
+
+    /**
      * 更新一个会议
      */
     update(meeting: Meeting): Promise<Boolean> {

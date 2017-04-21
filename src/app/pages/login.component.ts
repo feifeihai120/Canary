@@ -3,8 +3,6 @@ import { Router } from '@angular/router'
 
 // storage
 import { SessionStorage } from 'ng2-webstorage';
-// cookie
-import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 import { LoginUser } from '../service/login_user'
 import { UserService } from '../service/user.service'
@@ -27,8 +25,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService,
-    private cookieService: CookieService
+    private userService: UserService
   ) { }
 
   ngOnInit() {
